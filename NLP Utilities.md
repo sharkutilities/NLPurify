@@ -13,7 +13,7 @@
 The code is publically available at [**GitHub gists**](https://gist.github.com/ZenithClown) which is a simple platform for sharing *code snippets* with the community. To use the code, simply clone the code like:
 
 ```shell
-git clone https://gist.github.com/ZenithClown/<HASH>.git nlp_utils
+git clone https://gist.github.com/ZenithClown/68cb16b2f86bdc240c73247974a4c93d.git nlp_utils
 export PYTHONPATH="${PYTHONPATH}:nlp_utils"
 ```
 
