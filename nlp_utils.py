@@ -19,12 +19,20 @@ pip install python-Levenshtein
 @author: Debmalya Pramanik
 """
 
-# from fuzzywuzzy import fuzz
+from fuzzywuzzy import fuzz
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem.wordnet import WordNetLemmatizer
 
 def processor(string : str) -> str:
+    """
+    A Simple Utility Function to Pre-Process a String
+
+    The function inputs a string, and exports clean formatted string
+    which is free of stop words (english) and the words are
+    lemmatized, i.e. transformed to their base form.
+    """
+
     tokens = word_tokenize(string.lower())
     filterted = [word for word in tokens if word not in stopwords.words("english")]
     lemmatized = [WordNetLemmatizer().lemmatize(word, "v") for word in filterted]
@@ -32,5 +40,22 @@ def processor(string : str) -> str:
     return " ".join(lemmatized)
 
 
-def fuzzy_match(string : str, actual : str) -> int:
-    pass
+def fuzzyMatch(string : str, reference : str, method : str = "partial_ratio") -> int:
+    """
+    Calculate a Percentage Similarity between `string` and `reference` Text
+
+    Using the `fuzzywuzzy.fuzz()` method, the function calculates the percentage of
+    similarity between two text data. There are various methods available which can
+    be declared via `method` parameter. However, `partial_ratio` is great when
+    we want to match a text with partial data. For example, we want to find all the
+    strings which have the word 'annonymous' but the spelling, position may be
+    different in each case.
+    """
+
+    method = {
+        "ratio" : fuzz.ratio,
+        "partial_ratio" : fuzz.partial_ratio,
+        "token_sort_ratio" : fuzz.token_sort_ratio
+    }.get(method)
+
+    return method(reference, string)
