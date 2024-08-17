@@ -13,4 +13,3 @@ one-stop solution library oriented towards text cleaning.
 __version__ = "0.0.1.dev0"
 
 # init-time options registrations
-from nlpurify import nlp_utils

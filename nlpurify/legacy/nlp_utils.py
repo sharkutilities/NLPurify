@@ -84,9 +84,9 @@ def text_processor(string : str, **kwargs) -> str:
 
     :type  string: str
     :param string: Base string which needs formatting. The string
-        is converted into lower case. If passed from
-        ! `processor`this step is repeated.
-        TODO fix when passed through parent function.
+                   is converted into lower case. If passed from
+                   ! `processor`this step is repeated.
+                   TODO fix when passed through parent function.
 
     Keyword Arguments
     -----------------
