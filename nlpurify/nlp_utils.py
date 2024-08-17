@@ -7,7 +7,7 @@ requires the following corpus from `nltk` library:
   * `stopwords` : used to remove stop words from a given
                   strings. Currently using the function for
                   pre-processing.
-                  
+
 In addition, need some additional libraries like `fuzzywuzzy`
 and `python-Levenshtein` using the following:
 
@@ -37,17 +37,17 @@ def processor(string : str, text_process : bool = False, **kwargs) -> str:
 
     :type  string: str
     :param string: Base string on which various `nltk` functions are
-                   applied to clean unwanted informations.
+        applied to clean unwanted informations.
 
     :type  text_process: bool
     :param text_process: Should the base string be  formatted using
-                         `text_process()`. Defaults to False.
+        `text_process()`. Defaults to False.
     """
 
     tokens = word_tokenize(string.lower())
     filterted = [word for word in tokens if word not in stopwords.words("english")]
     lemmatized = [WordNetLemmatizer().lemmatize(word, "v") for word in filterted]
-    
+
     return text_processor(" ".join(lemmatized), **kwargs) if text_process else " ".join(lemmatized)
 
 
@@ -86,9 +86,9 @@ def text_processor(string : str, **kwargs) -> str:
 
     :type  string: str
     :param string: Base string which needs formatting. The string
-                   is converted into lower case. If passed from
-                   ! `processor`this step is repeated.
-                   TODO fix when passed through parent function.
+        is converted into lower case. If passed from
+        ! `processor`this step is repeated.
+        TODO fix when passed through parent function.
 
     Keyword Arguments
     -----------------
