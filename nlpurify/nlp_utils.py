@@ -15,8 +15,6 @@ and `python-Levenshtein` using the following:
 pip install fuzzywuzzy
 pip install python-Levenshtein
 ```
-
-@author: Debmalya Pramanik
 """
 
 import re
