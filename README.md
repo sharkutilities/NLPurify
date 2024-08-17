@@ -29,4 +29,7 @@ pip install -U NLPurify
 
 The list of changes between each release is available [here](./CHANGELOG.md).
 
+> [!WARNING]
+> This code depreciate existing GitHub Gist which was previously designed. Check #1 for more details.
+
 </div>
