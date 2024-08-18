@@ -2,19 +2,34 @@
 
 """
 A set of utility function related to natural language
-processing. In addition to the basic libraries, the module
-requires the following corpus from `nltk` library:
-  * `stopwords` : used to remove stop words from a given
-                  strings. Currently using the function for
-                  pre-processing.
+processing. The code uses the :mod:`nltk` library along with basic
+string formattings to clean and process texts.
 
-In addition, need some additional libraries like `fuzzywuzzy`
-and `python-Levenshtein` using the following:
+.. warning::
+    The functions are not optimized and test cases are not checked.
+    Use the function with caution.
 
-```python
-pip install fuzzywuzzy
-pip install python-Levenshtein
-```
+**Getting Started**
+
+To use the function and its capabilities, first install the required
+libraries:
+
+.. code-block:: shell
+
+    $ pip install fuzzywuzzy
+    $ pip install python-Levenshtein # improve performance
+
+The legacy code is a standalone submodule, and can be used for
+existing dependent modules like:
+
+.. code-block:: python
+
+    import nlpurify.legacy as nlpu # nlp-utility functions
+    print(nlpu.text_process("some random string that needs cleaning"))
+
+To use the function, :mod:`nltk.corpus` must be installed for
+``stopwords`` and related. More informations is available
+`here <https://www.nltk.org/howto/corpus.html>`_.
 """
 
 import re
@@ -80,16 +95,17 @@ def text_processor(string : str, **kwargs) -> str:
     More information on in-built string methods is available here:
     https://www.programiz.com/python-programming/methods/string.
 
-    # ! Function is not yet optimized when used in conjunction.
+    .. attention::
+        The function is not yet optimized when used in conjunction.
 
     :type  string: str
     :param string: Base string which needs formatting. The string
-                   is converted into lower case. If passed from
-                   ! `processor`this step is repeated.
-                   TODO fix when passed through parent function.
+        is converted into lower case. If passed from
+        :func:`processor()`this step is repeated.
+        TODO fix when passed through parent function.
 
-    Keyword Arguments
-    -----------------
+    **Keyword Arguments**
+
         * *isalnum* (bool): Only keep `alpha-numeric` charecters in the
           string. Defaults to False.
         * *isalpha* (bool): Only keep `alphabets` charecters in the
