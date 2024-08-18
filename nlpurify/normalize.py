@@ -61,6 +61,34 @@ def _replace_double_space(text : str) -> str:
     return text
 
 
+def _uniform_text_case(text : str, case : str) -> str:
+    """
+    Create an Uniform Text Case - lower/upper
+
+    Uniform text case like lower or upper (typically lower, which is
+    more popular) is useful for end use cases like word
+    vectorizations, text matching etc.
+
+    The a case of value :attr:`casefold` returns the string in lower
+    but is more aggresive. Check Python string methods
+    `documentation <https://docs.python.org/3/library/stdtypes.html#str.casefold>`_
+    for more details.
+    """
+
+    _choice = {
+        "lower" : text.lower(),
+        "upper" : text.upper(),
+        "casefold" : text.casefold()
+    }
+
+    try:
+        text = _choice[case]
+    except KeyError:
+        raise ValueError(f"{case} is not in {_choice.keys()}")
+
+    return text
+
+
 def normalizeText(
         text : str,
         uniform_text_case : str = None,
@@ -94,10 +122,10 @@ def normalizeText(
 
     :type  uniform_text_case: str
     :param uniform_text_case: Create an uniform text case, which can
-        be either {``lower``, ``upper``}. Defaults to None, i.e., no
-        change in case. NOTE: other text case includes "capital", or
-        "title" case but that is not included and is left for user's
-        discretion as not used frequently.
+        be either {``lower``, ``upper``, or ``casefold``}. Defaults to
+        None, i.e., no change in case. NOTE: other text case includes
+        "capital", or "title" case but that is not included and is
+        left for user's discretion as not used frequently.
 
     :type  replace_double_space: bool
     :param replace_double_space: A common type of uncleaned text
@@ -152,6 +180,14 @@ def normalizeText(
     strip_whitespace = kwargs.get("strip_whitespace", True)
     strip_whitespace_inline = kwargs.get("strip_whitespace", True)
 
+    # ? related alternate terms to `strip_whitespace`
+    strip_whitespace_start = kwargs.get("strip_whitespace_start", False)
+    strip_whitespace_final = kwargs.get("strip_whitespace_final", False)
+
+    # ? related alternate terms to `strip_whitespace_inline`
+    strip_whitespace_inline_start = kwargs.get("strip_whitespace_inline_start", False)
+    strip_whitespace_inline_final = kwargs.get("strip_whitespace_inline_final", False)
+
     # ? define line break seperator, else use default os value
     line_break_seperator = kwargs.get("line_break_seperator", os.linesep)
 
@@ -166,20 +202,8 @@ def normalizeText(
         # or else get the os default, value is doubled internally
         text = text.replace(line_break_seperator * 2, line_break_seperator)
 
-    if uniform_text_case in ["lower", "upper"]:
-        text = text.lower() if uniform_text_case == "lower" else text.upper()
-    elif not uniform_text_case:
-        pass # do not change the case, keep as is
-    else:
-        raise ValueError(f"{uniform_text_case} is not valid.")
-
-    # ? related alternate terms to `strip_whitespace`
-    strip_whitespace_start = kwargs.get("strip_whitespace_start", False)
-    strip_whitespace_final = kwargs.get("strip_whitespace_final", False)
-
-    # ? related alternate terms to `strip_whitespace_inline`
-    strip_whitespace_inline_start = kwargs.get("strip_whitespace_inline_start", False)
-    strip_whitespace_inline_final = kwargs.get("strip_whitespace_inline_final", False)
+    if uniform_text_case:
+        text = _uniform_text_case(text, case = uniform_text_case)
 
     if any([strip_whitespace, strip_whitespace_start, strip_whitespace_final]):
         # white space character from the string is to be removed
