@@ -46,6 +46,21 @@ def _strip_whitespace(
     return text
 
 
+def _replace_double_space(text : str) -> str:
+    """
+    Normalize Text of Double Space Characters
+
+    A text may be uncleaned due to the presence of double white
+    space characters instead of single space. This can be cleaned
+    to increase performance.
+    """
+
+    pattern = re.compile(r"\s+") # one or more white space character
+    text = pattern.sub(" ", text)
+
+    return text
+
+
 def normalizeText(
         text : str,
         uniform_text_case : str = None,
@@ -141,8 +156,7 @@ def normalizeText(
     line_break_seperator = kwargs.get("line_break_seperator", os.linesep)
 
     if replace_double_space:
-        regex = re.compile(r"\s+") # one or more white space character
-        text = regex.sub(" ", text)
+        text = _replace_double_space(text)
 
     if strip_line_breaks:
         text = text.replace(line_break_seperator, " ")
