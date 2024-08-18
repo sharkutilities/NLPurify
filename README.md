@@ -20,16 +20,24 @@ detect and clean long texts and create word vectors.
 
 ## Getting Started
 
-The source code is currently hosted at GitHub: [**sharkutilities/NLPurify**](https://github.com/sharkutilities/NLPurify).
+The source code is hosted at GitHub: [**sharkutilities/NLPurify**](https://github.com/sharkutilities/NLPurify).
 The binary installers for the latest release are available at the [Python Package Index (PyPI)](https://pypi.org/project/NLPurify/).
 
 ```bash
 pip install -U NLPurify
 ```
 
-The list of changes between each release is available [here](./CHANGELOG.md).
-
-> ⚠️ This code depreciate existing GitHub Gist which was previously designed.
-> Check [#1](https://github.com/sharkutilities/NLPurify/issues/1) for more details.
+The module is currently under development, and new ideas are welcomed. Raise a new PR/issue for the same.
+The changes between each release are available [here](./CHANGELOG.md).
 
 </div>
+
+---
+
+> [!CAUTION]
+> **This code depreciates the existing GitHub Gist which was previously designed.**
+> Check [`#1`](https://github.com/sharkutilities/NLPurify/issues/1) for more details.
+
+> [!NOTE]
+> **_Legacy_ codes are available as a submodule.**
+> Check [`#5`](https://github.com/sharkutilities/NLPurify/issues/5) for more details.
