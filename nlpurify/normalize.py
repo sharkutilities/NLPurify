@@ -178,7 +178,7 @@ def normalizeText(
     """
 
     strip_whitespace = kwargs.get("strip_whitespace", True)
-    strip_whitespace_inline = kwargs.get("strip_whitespace", True)
+    strip_whitespace_inline = kwargs.get("strip_whitespace_inline", True)
 
     # ? related alternate terms to `strip_whitespace`
     strip_whitespace_start = kwargs.get("strip_whitespace_start", False)
