@@ -5,11 +5,15 @@
 
 <div align = "center">
 
-[![Documentation Status](https://readthedocs.org/projects/nlpurify/badge/?version=latest)](https://nlpurify.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/nlpurify/badge/?version=latest&style=plastic)](https://nlpurify.readthedocs.io/en/latest/?badge=latest)
 [![GitHub Issues](https://img.shields.io/github/issues/sharkutilities/NLPurify?style=plastic)](https://github.com/sharkutilities/NLPurify/issues)
 [![GitHub Forks](https://img.shields.io/github/forks/sharkutilities/NLPurify?style=plastic)](https://github.com/sharkutilities/NLPurify/network)
 [![GitHub Stars](https://img.shields.io/github/stars/sharkutilities/NLPurify?style=plastic)](https://github.com/sharkutilities/NLPurify/stargazers)
 [![LICENSE File](https://img.shields.io/github/license/sharkutilities/NLPurify?style=plastic)](https://github.com/sharkutilities/NLPurify/blob/master/LICENSE)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/NLPurify?style=plastic)](https://pypistats.org/packages/pandas-wizard)
+[![PyPI Latest Release](https://img.shields.io/pypi/v/NLPurify.svg?style=plastic)](https://pypi.org/project/NLPurify/)
+
+[![GuardRails badge](https://api.guardrails.io/v2/badges/252951?token=2e1d82f6a737cdd3151ea0c869ee61c86196c3a05d17b0d91bf5a032e7766dc0)](https://dashboard.guardrails.io/gh/sharkutilities/repos/252951)
 
 </div>
 
