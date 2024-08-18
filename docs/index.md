@@ -2,12 +2,20 @@
 
 <div align = "center">
 
+[![Documentation Status](https://readthedocs.org/projects/nlpurify/badge/?version=latest&style=plastic)](https://nlpurify.readthedocs.io/en/latest/?badge=latest)
 [![GitHub Issues](https://img.shields.io/github/issues/sharkutilities/NLPurify?style=plastic)](https://github.com/sharkutilities/NLPurify/issues)
 [![GitHub Forks](https://img.shields.io/github/forks/sharkutilities/NLPurify?style=plastic)](https://github.com/sharkutilities/NLPurify/network)
 [![GitHub Stars](https://img.shields.io/github/stars/sharkutilities/NLPurify?style=plastic)](https://github.com/sharkutilities/NLPurify/stargazers)
 [![LICENSE File](https://img.shields.io/github/license/sharkutilities/NLPurify?style=plastic)](https://github.com/sharkutilities/NLPurify/blob/master/LICENSE)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/NLPurify?style=plastic)](https://pypistats.org/packages/pandas-wizard)
+[![PyPI Latest Release](https://img.shields.io/pypi/v/NLPurify.svg?style=plastic)](https://pypi.org/project/NLPurify/)
 
 </div>
+
+```{toctree}
+:hidden:
+normalize.md
+```
 
 <div align = "justify">
 
@@ -25,20 +33,6 @@ pip install -U NLPurify
 ```
 
 The module is currently under development, and new ideas are welcomed. Raise a new PR/issue for the same.
-The changes between each release are available [here](./CHANGELOG.md).
-
----
-
-```{eval-rst}
-.. caution::
-  **This code depreciates the existing GitHub Gist which was previously designed.**
-  Check `#1 <https://github.com/sharkutilities/NLPurify/issues/1>`_ for more details.
-```
-
-```{eval-rst}
-.. note::
-  **Legacy codes are available as a submodule.**
-  Check `#5 <https://github.com/sharkutilities/NLPurify/issues/5>`_ for more details.
-```
+The changes between each release are available [here](https://github.com/sharkutilities/NLPurify/blob/master/CHANGELOG.md).
 
 </div>
