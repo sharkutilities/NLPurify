@@ -32,6 +32,13 @@ extensions = [
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
+# -- Autodoc configurations --------------------------------------------------
+# https://stackoverflow.com/a/44638788/6623589 reduces code writing at automodule config
+autodoc_default_options = {
+    "members": True,
+    "undoc-members": False,
+    "private-members": True
+}
 
 
 # -- Options for HTML output -------------------------------------------------

@@ -4,7 +4,6 @@
 
 ```{eval-rst}
 .. automodule:: nlpurify.normalize
-  :members:
 ```
 
 </div>
