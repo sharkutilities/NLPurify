@@ -98,9 +98,9 @@ def normalizeText(
           strips only the beginning or the ending white space from
           each line.
         * **line_break_seperator** (*str*): The end line character
-            which is either "\\r\\n" for windows or "\\n" for *nix
-            based systems. By default defaults to running operating
-            systems default.
+          which is either "\\r\\n" for windows or "\\n" for *nix
+          based systems. By default defaults to running operating
+          systems default.
     """
 
     strip_whitespace = kwargs.get("strip_whitespace", True)
