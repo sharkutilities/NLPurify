@@ -51,6 +51,11 @@ changelogs are as follows:
 The conceptualization phase where the module objective, design patterns, and list of intended features for end-users are
 listed. The below versions are minor/micro changes related to the stable release.
 
+  * **v0.0.1.dev2** - Developmental Release, WIP
+    * 🎉 Added more parametric control for text normalization like scentence case, strip line breaks.
+    * 🛠️ Code compatibility with existing features to strip line breaks against strip characters commands.
+    * ⚙️ All the different functionalities (like strip white space, etc.) are now moved under seperate private functions,
+      this allows more control and easy management.
   * **v0.0.1.dev1** - Developmental Release, 18.08.2024
     * 🛠️ Legacy GitHub Gist code is added under submodule `nlpurify.legacy`. For more details and migration techniques,
       check [`#5`](https://github.com/sharkutilities/NLPurify/issues/5) for more informations.
