@@ -10,6 +10,7 @@ all such user's requests.
 """
 
 import os
+import re
 
 def _strip_whitespace(
         text : str,
@@ -47,7 +48,9 @@ def _strip_whitespace(
 
 def normalizeText(
         text : str,
+        uniform_text_case : str = None,
         replace_double_space : bool = True,
+        strip_line_breaks : bool = False,
         replace_double_line_breaks : bool = True,
         **kwargs
     ) -> str:
@@ -57,6 +60,16 @@ def normalizeText(
     The normalization function uses the in-built string function like
     :attr:`.strip()`, :attr:`.replace()` etc. to return a cleaner
     version. The following arguments are available for more control.
+    A normalized texts may have the following properties:
+
+        * It may not start or end with a white space character,
+        * It may not have double space instead of single space, and
+        * It may not be spread across multiple lines.
+
+    All the above properties are desired, and can improve performance
+    when used to train a large language model. Normalizaton of texts
+    may also involve uniform case, typically :attr:`.lower()` that
+    can be used to create a word vector.
 
     :type  text: str
     :param text: The base uncleaned text, all the operations are
@@ -64,11 +77,29 @@ def normalizeText(
         be single line, multi-line (example from "text area") and can
         have any type of escape characters.
 
+    :type  uniform_text_case: str
+    :param uniform_text_case: Create an uniform text case, which can
+        be either {``lower``, ``upper``}. Defaults to None, i.e., no
+        change in case. NOTE: other text case includes "capital", or
+        "title" case but that is not included and is left for user's
+        discretion as not used frequently.
+
     :type  replace_double_space: bool
     :param replace_double_space: A common type of uncleaned text
         format includes double space (white characters), which can be
         directly cleaned without compromising informations. Defaults
         to True.
+
+    :type  strip_line_breaks: bool
+    :param strip_line_breaks: Strip line breaks and returns a single
+        line statement. This uses the os default which is either
+        "CR LF" for windows or "LF" for *nix based systems. However,
+        the default value can be override using keyword argument
+        :attr:`line_break_seperator` if not using default value.
+        Defaults to False. The parameter has an overriding effect on
+        the :attr:`replace_double_line_breaks` and the keyword
+        argument :attr:`strip_whitespace_inline*` if True the text
+        is unaltered.
 
     :type  replace_double_line_breaks: bool
     :param replace_double_line_breaks: Double line breaks are common
@@ -106,15 +137,27 @@ def normalizeText(
     strip_whitespace = kwargs.get("strip_whitespace", True)
     strip_whitespace_inline = kwargs.get("strip_whitespace", True)
 
+    # ? define line break seperator, else use default os value
+    line_break_seperator = kwargs.get("line_break_seperator", os.linesep)
+
     if replace_double_space:
-        # ? can compile with regex:: `re.compile(r"\s+"")`
-        text = text.replace("  ", " ")
+        regex = re.compile(r"\s+") # one or more white space character
+        text = regex.sub(" ", text)
+
+    if strip_line_breaks:
+        text = text.replace(line_break_seperator, " ")
 
     if replace_double_line_breaks:
         # get the keyword argument for line break seperator,
         # or else get the os default, value is doubled internally
-        line_break_seperator = kwargs.get("line_break_seperator", os.linesep)
         text = text.replace(line_break_seperator * 2, line_break_seperator)
+
+    if uniform_text_case in ["lower", "upper"]:
+        text = text.lower() if uniform_text_case == "lower" else text.upper()
+    elif not uniform_text_case:
+        pass # do not change the case, keep as is
+    else:
+        raise ValueError(f"{uniform_text_case} is not valid.")
 
     # ? related alternate terms to `strip_whitespace`
     strip_whitespace_start = kwargs.get("strip_whitespace_start", False)
