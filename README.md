@@ -5,6 +5,7 @@
 
 <div align = "center">
 
+[![Documentation Status](https://readthedocs.org/projects/nlpurify/badge/?version=latest)](https://nlpurify.readthedocs.io/en/latest/?badge=latest)
 [![GitHub Issues](https://img.shields.io/github/issues/sharkutilities/NLPurify?style=plastic)](https://github.com/sharkutilities/NLPurify/issues)
 [![GitHub Forks](https://img.shields.io/github/forks/sharkutilities/NLPurify?style=plastic)](https://github.com/sharkutilities/NLPurify/network)
 [![GitHub Stars](https://img.shields.io/github/stars/sharkutilities/NLPurify?style=plastic)](https://github.com/sharkutilities/NLPurify/stargazers)
