@@ -14,6 +14,7 @@ sys.path.insert(0, os.path.abspath(".."))
 # ? also import the module itself, to populate static contents like version
 sys.path.append(os.path.abspath(".."))
 import nlpurify
+import nlpurify.legacy # explictly import gh#8
 
 project = 'NLPurify'
 copyright = '2024, shark-utilities developers'
