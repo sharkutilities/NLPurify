@@ -16,6 +16,7 @@
 :hidden:
 normalize.md
 legacy.md
+feature_selection.md
 ```
 
 <div align = "justify">
