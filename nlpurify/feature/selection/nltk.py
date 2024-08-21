@@ -17,6 +17,8 @@ and is generally internally by all the related functions defined.
 
 import re
 
+from typing import Union
+
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
@@ -75,7 +77,7 @@ def tokenize_text(text : str, regexp : bool = False, vanilla : bool = False, **k
 
     The default keyword arguments are defined for the
     :func:`nltk.tokenize.word_tokenize` function.
-        
+
         * **preserve_line** (*bool*): A flag to decide whether to
           sentence tokenize the text or not, as accepted by
           the function. Defaults to False.
@@ -83,7 +85,7 @@ def tokenize_text(text : str, regexp : bool = False, vanilla : bool = False, **k
         * **tokenize_language** (*str*): The language model name as
           accepted by the Punkt corpus by NLTK. Defaults to the
           "english" language, as in function.
-    
+
     The paramter value associated with regular expression data
     control is as below:
 
@@ -137,6 +139,17 @@ def tokenize_text(text : str, regexp : bool = False, vanilla : bool = False, **k
         s = "this is an example string, with p()nct & n0s. 987"
         print(nlpurify.feature_selection.tokenize_text(s, vanilla = True, retalpha = False))
         >> ['this', 'is', 'an', 'example', 'with', '987']
+
+    **Error Guidelines**
+
+    :raises ValueError: The error is raised when both the attribute
+        ``vanilla`` and ``regexp`` is set to True.
+
+    **Return Type**
+
+    :rtype:  list[str]
+    :return: Returns a tokenized list of strings. To represent and
+        save the same in a tabular format use ``"".join()`` method.
     """
 
     preserve_line = kwargs.get("preserve_line", False)
@@ -185,7 +198,7 @@ def tokenize_text(text : str, regexp : bool = False, vanilla : bool = False, **k
     return tokens[tokenize_method]
 
 
-def remove_stopwords(text : str, language : str = "english", **kwargs) -> str:
+def remove_stopwords(text : str, language : str = "english", rtype : object = str, **kwargs) -> Union[str, list]:
     """
     Function to Remove Stopwods from a Raw Text using NLTK
 
@@ -246,7 +259,7 @@ def remove_stopwords(text : str, language : str = "english", **kwargs) -> str:
           the case of the words is not lower.
 
     **Function Example**
-    
+
     For more control over the tokenization, all the parameters
     of :func:`tokenize_text()` is accepted.
 
@@ -261,6 +274,18 @@ def remove_stopwords(text : str, language : str = "english", **kwargs) -> str:
         # this we can further simplify by using other features
         print(nlpurify.feature_selection.remove_stopwords(s, regexp = True))
         >> example string p nct n0s
+
+    **Error Guidelines**
+
+    :raises ValueError: The error is raised when the return type is
+        not in {str, list} values. Make sure the data type is an type
+        instance and is not passed as a string value.
+
+    **Return Type**
+
+    :rtype:  str | list
+    :return: A cleaned string or a vector (*iterable*) of selected
+        features from a given text message.
     """
 
     tokenize = kwargs.get("tokenize", True)
@@ -269,7 +294,7 @@ def remove_stopwords(text : str, language : str = "english", **kwargs) -> str:
     stopwords_ = stopwords.words(language) # defaults to english
 
     # ? normalize the text using nlpurify.normalizeText()
-    # else, left at user's discreations or additional functionalities 
+    # else, left at user's discreations or additional functionalities
     text = normalizeText(
         text,
         uniform_text_case = "lower",
@@ -277,4 +302,10 @@ def remove_stopwords(text : str, language : str = "english", **kwargs) -> str:
     ) if normalize else text
 
     tokens = tokenize_text(text, **kwargs) if tokenize else text
-    return " ".join([word for word in tokens if word not in stopwords_])
+    tokens = [word for word in tokens if word not in stopwords_]
+
+    # ensure return type of the data, else raise error
+    if rtype not in [str, list]:
+        raise ValueError(f"Accepted arguments ``list`` or ``str`` received {rtype}.")
+
+    return " ".join(tokens) if rtype == str else tokens

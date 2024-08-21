@@ -15,8 +15,8 @@
 ```{toctree}
 :hidden:
 normalize.md
+feature.md
 legacy.md
-feature_selection.md
 ```
 
 <div align = "justify">
