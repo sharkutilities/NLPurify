@@ -13,4 +13,8 @@ one-stop solution library oriented towards text cleaning.
 __version__ = "0.0.1.dev2"
 
 # init-time options registrations
+from nlpurify.feature import (
+    selection as feature_selection
+)
+
 from nlpurify.normalize import normalizeText
