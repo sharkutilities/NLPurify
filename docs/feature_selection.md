@@ -1,4 +1,4 @@
-# Legacy Functions
+# Feature Selection
 
 <div align = "justify">
 
