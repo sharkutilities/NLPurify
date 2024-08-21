@@ -145,6 +145,9 @@ def tokenize_text(text : str, regexp : bool = False, vanilla : bool = False, **k
     :raises ValueError: The error is raised when both the attribute
         ``vanilla`` and ``regexp`` is set to True.
 
+    :raises ImportError: Error is raised when one or more nltk corpus
+        is not available in the system.
+
     **Return Type**
 
     :rtype:  list[str]
@@ -280,6 +283,9 @@ def remove_stopwords(text : str, language : str = "english", rtype : object = st
     :raises ValueError: The error is raised when the return type is
         not in {str, list} values. Make sure the data type is an type
         instance and is not passed as a string value.
+
+    :raises ImportError: Error is raised when one or more nltk corpus
+        is not available in the system.
 
     **Return Type**
 
