@@ -12,6 +12,45 @@ from typing import List
 from nlpurify.fuzzy.wrapper import fuzzy_score
 
 class LogicalFuzzy:
+    """
+    The Logical Fuzzy is an Extension of Scoring for Logical Operation
+
+    The logical operations can be integrated to search more than one
+    reference string from a statement. This allows more control and
+    also reduces repeated function call involving loops and other
+    conditional statements.
+
+    :attr  string: str
+    :param string: The original string against which the reference
+        values are to be checked and validated.
+
+    :attr  references: list
+    :param references: A list of n-references against which fuzzy
+        score is determined. The score is also a n-length array.
+
+    :attr  method: str
+    :param method: Amy of the supported method :func:`fuzzywuzzy.fuzz`
+        module, defaults to "partial_ratio" method.
+
+    .. code-block:: python
+
+        statement = "a quick brown fox jumps over a lazy dog"
+
+        # let's create an object to calculate and score the statement
+        logical_fuzzy = nlpurify.fuzzy.LogicalFuzzy(statement, "quick", "foxy")
+
+        # let's check the individual score of `quick` and `foxy` against statement
+        print(logical_fuzzy._fuzzy_score_())
+        >> [100, 75]
+
+        # now we can have both the logical and controls like:
+        print(logical_fuzzy.evaluate(80, logic = "any", operator = "<="))
+        >> True # 100 <= 80 and 75 <= 80
+
+        print(logical_fuzzy.evaluate(80, logic = "all"))
+        >> False # 100 >= 80 and 75 >= 80
+    """
+
     def __init__(
         self,
         string : str,
@@ -33,7 +72,7 @@ class LogicalFuzzy:
             fuzzy_score(self.string, reference, self.method)
             for reference in self.references
         ]
-    
+
 
     def evaluate(self, thresh : int, logic : str, operator : str = ">="):
         """
