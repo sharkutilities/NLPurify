@@ -57,34 +57,6 @@ def strip_whitespace(text : str, **kwargs) -> str:
     return text
 
 
-def _uniform_text_case(text : str, case : str) -> str:
-    """
-    Create an Uniform Text Case - lower/upper
-
-    Uniform text case like lower or upper (typically lower, which is
-    more popular) is useful for end use cases like word
-    vectorizations, text matching etc.
-
-    The a case of value :attr:`casefold` returns the string in lower
-    but is more aggresive. Check Python string methods
-    `documentation <https://docs.python.org/3/library/stdtypes.html#str.casefold>`_
-    for more details.
-    """
-
-    _choice = {
-        "lower" : text.lower(),
-        "upper" : text.upper(),
-        "casefold" : text.casefold()
-    }
-
-    try:
-        text = _choice[case]
-    except KeyError:
-        raise ValueError(f"{case} is not in {_choice.keys()}")
-
-    return text
-
-
 def normalizeText(
         text : str,
         uniform_text_case : str = None,
