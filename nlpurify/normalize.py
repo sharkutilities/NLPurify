@@ -12,51 +12,47 @@ all such user's requests.
 import os
 import re
 
-def _strip_whitespace(
-        text : str,
-        strip_whitespace : bool,
-        strip_whitespace_start : bool,
-        strip_whitespace_final : bool
-    ) -> str:
+def strip_whitespace(text : str, **kwargs) -> str:
     """
-    Normalive Text of White Spaces from Beginning and End
+    Normalize Whitespaces in a Text Data
 
-    The normal text behavior is that they do not contain a white space
-    characters at the beginning and end of the string.
+    Cleaning texts of white spaces like from beginning, end, and
+    also multiple white spaces does not add any value to a text and
+    should thus be removed to normalize the text.
+
+    :type  text: str
+    :param text: Original string which needs to be cleaned of
+        white spaces.
+
+    Keyword Arguments
+    -----------------
+
+    The function now provides the following additional keyword
+    arguments for control:
+
+        * **lstrip** (*bool*): Left strip white space from the
+            provided text. Defaults to True.
+        * **rstrip** (*bool*): Right strip white space from the
+            provided text. Defaults to True.
+        * **multiple_whitespace** (*bool*): Delete multiple spaces
+            from the text. This uses the pattern cleaning using
+            regular expression. Defaults to True.
     """
 
-    _choice = {
-        "strip_whitespace_start" : text.lstrip(),
-        "strip_whitespace_final" : text.rstrip(),
+    lstrip = kwargs.get("lstrip", True)
+    rstrip = kwargs.get("rstrip", True)
+    multiple_whitespace = kwargs.get("multiple_whitespace", True)
 
-        # ? setting default i.e., no strip when all false
-        "default" : text
-    }
-
-    if strip_whitespace:
-        # has priority over `strip_whitespace_*` atrributes
-        text = text.strip()
+    if not any([lstrip, rstrip]):
+        # we cannot use the default strip function and should be
+        # handled seperately using each conditional statement
+        text = text.lstrip() if lstrip else text.rstrip() if rstrip else text
     else:
-        choice = "strip_whitespace_start" if strip_whitespace_start \
-            else "strip_whitespace_final" if strip_whitespace_final \
-            else "default"
+        text = text.strip()
 
-        text = _choice[choice]
-
-    return text
-
-
-def _replace_double_space(text : str) -> str:
-    """
-    Normalize Text of Double Space Characters
-
-    A text may be uncleaned due to the presence of double white
-    space characters instead of single space. This can be cleaned
-    to increase performance.
-    """
-
+    # clean the text of multiple white spaces using regular expression
     pattern = re.compile(r"\s+") # one or more white space character
-    text = pattern.sub(" ", text)
+    text = pattern.sub(" ", text) if multiple_whitespace else text
 
     return text
 
