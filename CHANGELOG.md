@@ -53,9 +53,9 @@ can be used for classification, scoring and identification.
 
   * **v2.0.0.a0** - Due to unplanned developmental changes, the version (`v1+`) is skipped and is maintained internally, while
     **`v2+`** is the first proposed version for pblic usage. This version merges and is now assigned `alpha` release tag.
-      * Fixes naming convention for the module (#15),
-      * Remove redundant function `_uniform_text_case()` from the module, and
-      * Include advanced functionality like fuzzy scoring for text classification (#14).
+      * 💣 Fixes naming convention for the module (#15),
+      * 💣 Remove redundant function `_uniform_text_case()` from the module, and
+      * 🎉 Include advanced functionality like fuzzy scoring for text classification (#14).
 
   * **v0.0.3.dev3** - Developmental preview release that allows the developer/end user to use the fuzzy module. The version
     is tagged internally as development release.
