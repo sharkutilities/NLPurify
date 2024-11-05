@@ -46,15 +46,21 @@ changelogs are as follows:
   * ⚙️ - **Code Efficiency** : an existing feature now may not require as much computation or memory.
   * 💣 - **Code Refactoring** : a breakable change often associated with `major` version bump.
 
-### Version 2.0.0 | Advanced Functionalities - Fuzzy Scoring | WIP
+### Version 2.0.0 | WIP
 
 The version is dedicated towards development and integration of `fuzzy` logic for sequence matching and scoring which
 can be used for classification, scoring and identification.
 
+  * **v2.0.0.a0** - Due to unplanned developmental changes, the version (`v1+`) is skipped and is maintained internally, while
+    **`v2+`** is the first proposed version for pblic usage. This version merges and is now assigned `alpha` release tag.
+      * Fixes naming convention for the module (#15),
+      * Remove redundant function `_uniform_text_case()` from the module, and
+      * Include advanced functionality like fuzzy scoring for text classification (#14).
+
   * **v0.0.3.dev3** - Developmental preview release that allows the developer/end user to use the fuzzy module. The version
     is tagged internally as development release.
 
-### Version 1.0.0 | Conceptualization Phase | WIP
+### Version 1.0.0 | Conceptualization Phase | Internal, Not Released to Public
 
 The conceptualization phase where the module objective, design patterns, and list of intended features for end-users are
 listed. The below versions are minor/micro changes related to the stable release.
@@ -64,12 +70,14 @@ listed. The below versions are minor/micro changes related to the stable release
     * 🛠️ Code compatibility with existing features to strip line breaks against strip characters commands.
     * ⚙️ All the different functionalities (like strip white space, etc.) are now moved under seperate private functions,
       this allows more control and easy management.
+
   * **v0.0.1.dev1** - Developmental Release, 18.08.2024
     * 🛠️ Legacy GitHub Gist code is added under submodule `nlpurify.legacy`. For more details and migration techniques,
       check [`#5`](https://github.com/sharkutilities/NLPurify/issues/5) for more informations.
     * 📝 Code documentation is hosted at [RTD/nlpurify](http://nlpurify.readthedocs.io/).
     * 🎉 Text normalization, i.e., cleaning of texts of unwanted characters like double space, multiple line breaks can
       now be cleaned by using function [normalizeText()](./nlpurify/normalize.py).
+
   * **v0.0.1.dev0** - Developmental Release, 17.08.2024
     * 🎉 Marks as the day when the ideation of the project started, and the name `NLPurify` is registered in PyPI.
     * ⚙️ This version is internal and have been deleted, this was released to block the package namespace.
