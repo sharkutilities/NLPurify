@@ -46,6 +46,14 @@ changelogs are as follows:
   * ⚙️ - **Code Efficiency** : an existing feature now may not require as much computation or memory.
   * 💣 - **Code Refactoring** : a breakable change often associated with `major` version bump.
 
+### Version 2.0.0 | Advanced Functionalities - Fuzzy Scoring | WIP
+
+The version is dedicated towards development and integration of `fuzzy` logic for sequence matching and scoring which
+can be used for classification, scoring and identification.
+
+  * **v0.0.3.dev3** - Developmental preview release that allows the developer/end user to use the fuzzy module. The version
+    is tagged internally as development release.
+
 ### Version 1.0.0 | Conceptualization Phase | WIP
 
 The conceptualization phase where the module objective, design patterns, and list of intended features for end-users are
