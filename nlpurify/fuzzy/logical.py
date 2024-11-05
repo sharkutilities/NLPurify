@@ -40,7 +40,7 @@ class LogicalFuzzy:
         logical_fuzzy = nlpurify.fuzzy.LogicalFuzzy(statement, "quick", "foxy")
 
         # let's check the individual score of `quick` and `foxy` against statement
-        print(logical_fuzzy._fuzzy_score_())
+        print(logical_fuzzy.fuzzy_scores())
         >> [100, 75]
 
         # now we can have both the logical and controls like:
@@ -67,7 +67,15 @@ class LogicalFuzzy:
         self.method = method
 
 
-    def _fuzzy_score_(self) -> list:
+    def fuzzy_scores(self) -> list:
+        """
+        Calculate Fuzzy Score of Each Reference to Statement
+
+        The internal function iterates for each reference string to
+        score the similarity against the statement using the internal
+        :func:`nlpurify.fuzzy.wrapper.fuzzy_score()` method.
+        """
+
         return [
             fuzzy_score(self.string, reference, self.method)
             for reference in self.references
