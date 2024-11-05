@@ -18,4 +18,4 @@ from nlpurify.feature import (
 )
 
 from nlpurify import fuzzy
-from nlpurify.normalize import normalizeText
+from nlpurify.normalize import normalize
