@@ -16,6 +16,7 @@
 :hidden:
 normalize.md
 feature.md
+fuzzy.md
 legacy.md
 ```
 
