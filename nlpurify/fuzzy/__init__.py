@@ -7,4 +7,5 @@ string to find an approximate solution - like scoring two sequences
 based on similarity, and thus extending the logic to cluster, etc.
 """
 
-from nlpurify.fuzzy.wrapper import scoring # noqa: F401, F403 # pyright: ignore[reportMissingImports]
+from nlpurify.fuzzy.wrapper import fuzzy_score # noqa: F401, F403 # pyright: ignore[reportMissingImports]
+from nlpurify.fuzzy.logical import LogicalFuzzy # noqa: F401, F403 # pyright: ignore[reportMissingImports]

@@ -17,4 +17,5 @@ from nlpurify.feature import (
     selection as feature_selection
 )
 
+from nlpurify import fuzzy
 from nlpurify.normalize import normalizeText
