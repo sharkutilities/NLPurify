@@ -20,15 +20,15 @@ class LogicalFuzzy:
     also reduces repeated function call involving loops and other
     conditional statements.
 
-    :attr  string: str
+    :type  string: str
     :param string: The original string against which the reference
         values are to be checked and validated.
 
-    :attr  references: list
+    :type  references: list
     :param references: A list of n-references against which fuzzy
         score is determined. The score is also a n-length array.
 
-    :attr  method: str
+    :type  method: str
     :param method: Amy of the supported method :func:`fuzzywuzzy.fuzz`
         module, defaults to "partial_ratio" method.
 
@@ -85,11 +85,11 @@ class LogicalFuzzy:
         and is evaluated using the :func:`eval()` to determine the
         final result and provide the score.
 
-        :attr  logic: str
+        :type  logic: str
         :param logic: The logical operator which is either :attr:`all`
             i.e., and condition and :attr:`any` which is or condition.
 
-        :attr  operator: str
+        :type  operator: str
         :param operator: The deterministic operator which can be used
             to efficiently control both the side of the curve for
             fuzzy scoring.

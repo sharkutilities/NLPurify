@@ -2,6 +2,10 @@
 
 <div align = "justify">
 
+```{eval-rst}
+.. automodule:: nlpurify.fuzzy
+```
+
 ## Fuzzy Scoring Wrapper
 
 ```{eval-rst}
