@@ -10,11 +10,12 @@ one-stop solution library oriented towards text cleaning.
 
 # ? package follows https://peps.python.org/pep-0440/
 # ? https://python-semver.readthedocs.io/en/latest/advanced/convert-pypi-to-semver.html
-__version__ = "0.0.1.dev2"
+__version__ = "0.0.1.dev3"
 
 # init-time options registrations
 from nlpurify.feature import (
     selection as feature_selection
 )
 
+from nlpurify import fuzzy
 from nlpurify.normalize import normalizeText
