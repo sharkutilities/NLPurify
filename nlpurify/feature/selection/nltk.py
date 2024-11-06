@@ -22,7 +22,7 @@ from typing import Union
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
-from nlpurify.normalize import normalizeText
+from nlpurify.normalization import normalize
 
 def tokenize_text(text : str, regexp : bool = False, vanilla : bool = False, **kwargs) -> list:
     """
@@ -301,7 +301,7 @@ def remove_stopwords(text : str, language : str = "english", rtype : object = st
 
     # ? normalize the text using nlpurify.normalizeText()
     # else, left at user's discreations or additional functionalities
-    text = normalizeText(
+    text = normalize(
         text,
         uniform_text_case = "lower",
         strip_line_breaks = True

@@ -13,9 +13,13 @@ one-stop solution library oriented towards text cleaning.
 __version__ = "v2.0.0.a0"
 
 # init-time options registrations
+from nlpurify import fuzzy
+
 from nlpurify.feature import (
     selection as feature_selection
 )
 
-from nlpurify import fuzzy
-from nlpurify.normalize import normalize
+from nlpurify.normalization import (
+    normalize,
+    strip_whitespace
+)

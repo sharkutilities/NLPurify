@@ -31,24 +31,53 @@ def strip_whitespace(text : str, **kwargs) -> str:
     arguments for control:
 
         * **lstrip** (*bool*): Left strip white space from the
-            provided text. Defaults to True.
+            provided text. Defaults to True. Setting any of the value
+            to ``False`` overrides the default ``.strip()` function.
         * **rstrip** (*bool*): Right strip white space from the
-            provided text. Defaults to True.
+            provided text. Defaults to True. Setting any of the value
+            to ``False`` overrides the default ``.strip()` function.
         * **multiple_whitespace** (*bool*): Delete multiple spaces
             from the text. This uses the pattern cleaning using
             regular expression. Defaults to True.
+
+    Example(s) & Use Case(s)
+    ------------------------
+
+    The function can be used to return a clean string of white spaces
+    as per user requirement:
+
+    .. code-block:: python
+
+        statement = "  this is an example  string with  white space "
+
+        # example of default behavior - remove all abnormal spaces::
+        print(f"`{nlpurify.strip_whitespace(statement)}`")
+        >>> `this is an example string with white space`
+
+        # example of using either lstrip/rstrip/none as keywords
+        print(f"`{nlpurify.strip_whitespace(statement, lstrip = False)}`")
+        >>> ` this is an example string with white space`
+
+        # example of setting multiple_whitespace
+        print(f"`{nlpurify.strip_whitespace(statement, multiple_whitespace = False)}`")
+        >>> `this is an example  string with  white space`
+
+    :rtype:  str
+    :return: Return a cleaner version of string free of white
+        characters as per user requirement.
     """
 
     lstrip = kwargs.get("lstrip", True)
     rstrip = kwargs.get("rstrip", True)
     multiple_whitespace = kwargs.get("multiple_whitespace", True)
 
-    if not any([lstrip, rstrip]):
+    if all([lstrip, rstrip]):
+        # when both the condition is true, then default to `.strip()`
+        text = text.strip()
+    else:
         # we cannot use the default strip function and should be
         # handled seperately using each conditional statement
         text = text.lstrip() if lstrip else text.rstrip() if rstrip else text
-    else:
-        text = text.strip()
 
     # clean the text of multiple white spaces using regular expression
     pattern = re.compile(r"\s+") # one or more white space character
@@ -85,7 +114,8 @@ def normalize(text : str, strip : bool = True, **kwargs) -> str:
     :param strip: The global attribute to clean and normalize text
         of white spaces and multiple line breaks.
 
-    **Keyword Arguments**
+    Keyword Arguments
+    -----------------
 
     All the arguments of :func:`nlpurify.normalize.strip_whitespace()`
     is accepted. In addition, the following are specific to this
@@ -96,32 +126,49 @@ def normalize(text : str, strip : bool = True, **kwargs) -> str:
             which is either "CR LF" for windows or "LF" for *nix
             based systems. However, the default value can be override
             using keyword argument :attr:`line_break_seperator`.
-            Defaults to False. The parameter has an overriding effect on
-            the :attr:`replace_double_line_breaks`, and if True the text
-            is unaltered.
-
-        * **replace_double_line_breaks** (*bool*): Double line breaks
-            are common in texts containing paragraphs. This can be
-            easily replaced with a single line break character set.
             Defaults to True.
 
         * **line_break_seperator** (*str*): The end line character
           which is either "\\r\\n" for windows or "\\n" for *nix
           based systems. By default defaults to running operating
           systems default.
+
+        * **strip_tab_space** (*bool*): Strip a line of tab character,
+            defaults to True.
+
+    Example(s) & Use Case(s)
+    ------------------------
+
+    The function returns all scentence to default lower case, and
+    strips the text filed of white spaces and multiple lines into one
+    single scentence.
+
+    .. code-block:: python
+
+        statement = '''
+        thIs Is an example  string with  \t\nwhite space
+
+        loreememm ipsum dolor
+
+        '''
+
+        # default behavior removes all into single statement
+        print(f"`{nlpurify.normalize(statement)}`")
+        >>> `this is an example string with white space loreememm ipsum dolor`
+
+    :rtype:  str
+    :return: Return a cleaner version of string free of white
+        characters as per user requirement.
     """
 
     line_break_seperator = kwargs.get("line_break_seperator", os.linesep)
 
     # normalize text of line breaks based on os/user defined
     text = text.replace(line_break_seperator, " ") \
-        if kwargs.get("strip_line_breaks", False) else text
-    text = text.replace(line_break_seperator * 2, line_break_seperator) \
-        if kwargs.get("replace_double_line_breaks", True) else text
+        if kwargs.get("strip_line_breaks", True) else text
+    text = text.replace(line_break_seperator, " ") \
+        if kwargs.get("strip_tab_space", True) else text
 
     # ! 💣 always return the text in lowercase instead of user choice
     # in addition, run the white space removal logic to normalize the text
-    text = strip_whitespace(text, **kwargs).lower() \
-        if strip else text.lower()
-
-    return text
+    return strip_whitespace(text, **kwargs).lower() if strip else text.lower()
