@@ -201,7 +201,7 @@ def tokenize_text(text : str, regexp : bool = False, vanilla : bool = False, **k
     return tokens[tokenize_method]
 
 
-def remove_stopwords(text : str, language : str = "english", rtype : object = str, **kwargs) -> Union[str, list]:
+def remove_stopwords(text : str, language : str = "english", rtype : object = str, **kwargs) -> str | list:
     """
     Function to Remove Stopwods from a Raw Text using NLTK
 
@@ -294,20 +294,16 @@ def remove_stopwords(text : str, language : str = "english", rtype : object = st
         features from a given text message.
     """
 
-    tokenize = kwargs.get("tokenize", True)
-    normalize = kwargs.get("normalize", True)
+    tokenize_ = kwargs.get("tokenize", True)
+    normalize_ = kwargs.get("normalize", True)
 
     stopwords_ = stopwords.words(language) # defaults to english
 
     # ? normalize the text using nlpurify.normalizeText()
     # else, left at user's discreations or additional functionalities
-    text = normalize(
-        text,
-        uniform_text_case = "lower",
-        strip_line_breaks = True
-    ) if normalize else text
+    text = normalize(text, **kwargs) if normalize_ else text
 
-    tokens = tokenize_text(text, **kwargs) if tokenize else text
+    tokens = tokenize_text(text, **kwargs) if tokenize_ else text
     tokens = [word for word in tokens if word not in stopwords_]
 
     # ensure return type of the data, else raise error

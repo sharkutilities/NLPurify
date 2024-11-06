@@ -103,5 +103,5 @@ class LogicalFuzzy:
             fuzzy scoring.
         """
 
-        scores = self._fuzzy_score_()
+        scores = self.fuzzy_scores()
         return eval(f"{logic}([score {operator} {thresh} for score in {scores}])")
