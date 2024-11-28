@@ -43,10 +43,11 @@ class LogicalFuzzy:
         print(logical_fuzzy.fuzzy_scores())
         >> [100, 75]
 
-        # now we can have both the logical and controls like:
+        # code to check if any of the value is <= 80
         print(logical_fuzzy.evaluate(80, logic = "any", operator = "<="))
         >> True # 100 <= 80 and 75 <= 80
 
+        # code to check that all the values are >= 80 (default operator)
         print(logical_fuzzy.evaluate(80, logic = "all"))
         >> False # 100 >= 80 and 75 >= 80
     """
