@@ -9,7 +9,7 @@ and/or conditional statements for the end user.
 """
 
 from typing import List
-from nlpurify.fuzzy.wrapper import fuzzy_score
+from nlpurify.scoring.fuzzy.wrapper import fuzzy_score
 
 class LogicalFuzzy:
     """
