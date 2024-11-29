@@ -1,11 +1,14 @@
 # -*- encoding: utf-8 -*-
 
-from typing import Iterable
+from typing import List, Iterable
 from abc import ABC, abstractmethod
 
 class BaseLogicalOperator(ABC):
-    def __init__(self):
-        pass
+    def __init__(self, string : str, *references : List[str]) -> None:
+        self.string = string
+
+        # list of any n-reference strings for fuzzy scoring
+        self.references = references
 
 
     @abstractmethod

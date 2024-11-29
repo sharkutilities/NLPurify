@@ -60,11 +60,7 @@ class LogicalFuzzy(BaseLogicalOperator):
         *references : List[str],
         method : str = "partial_ratio"
     ) -> None:
-        super().__init__()
-        self.string = string
-
-        # list of any n-reference strings for fuzzy scoring
-        self.references = references
+        super().__init__(string, *references)
 
         # mandatory keyword arguments which determines the fuzzy
         # the method is any of the supported argument of the fuzzy
