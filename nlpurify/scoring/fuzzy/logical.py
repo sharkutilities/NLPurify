@@ -8,10 +8,12 @@ module. This reduces manual intervention like using repeated for-loop
 and/or conditional statements for the end user.
 """
 
-from typing import List
-from nlpurify.scoring.fuzzy.wrapper import fuzzy_score
+from typing import Iterable, List
 
-class LogicalFuzzy:
+from nlpurify.scoring.fuzzy.wrapper import fuzzy_score
+from nlpurify.scoring.baseclass import BaseLogicalOperator
+
+class LogicalFuzzy(BaseLogicalOperator):
     """
     The Logical Fuzzy is an Extension of Scoring for Logical Operation
 
@@ -40,7 +42,7 @@ class LogicalFuzzy:
         logical_fuzzy = nlpurify.fuzzy.LogicalFuzzy(statement, "quick", "foxy")
 
         # let's check the individual score of `quick` and `foxy` against statement
-        print(logical_fuzzy.fuzzy_scores())
+        print(logical_fuzzy.scores())
         >> [100, 75]
 
         # code to check if any of the value is <= 80
@@ -58,6 +60,7 @@ class LogicalFuzzy:
         *references : List[str],
         method : str = "partial_ratio"
     ) -> None:
+        super().__init__()
         self.string = string
 
         # list of any n-reference strings for fuzzy scoring
@@ -68,7 +71,7 @@ class LogicalFuzzy:
         self.method = method
 
 
-    def fuzzy_scores(self) -> list:
+    def scores(self) -> Iterable[float]:
         """
         Calculate Fuzzy Score of Each Reference to Statement
 
@@ -81,28 +84,3 @@ class LogicalFuzzy:
             fuzzy_score(self.string, reference, self.method)
             for reference in self.references
         ]
-
-
-    def evaluate(self, thresh : int, logic : str, operator : str = ">="):
-        """
-        Evaluate the Final Score using Operators
-
-        The operator like :attr:`>=`, :attr:`<=` is dynamic and thus
-        provides additional controls to the logical operations as it
-        can now be used to efficiently negate both the side of the
-        curve for sequence matching. The operator is used internally
-        and is evaluated using the :func:`eval()` to determine the
-        final result and provide the score.
-
-        :type  logic: str
-        :param logic: The logical operator which is either :attr:`all`
-            i.e., and condition and :attr:`any` which is or condition.
-
-        :type  operator: str
-        :param operator: The deterministic operator which can be used
-            to efficiently control both the side of the curve for
-            fuzzy scoring.
-        """
-
-        scores = self.fuzzy_scores()
-        return eval(f"{logic}([score {operator} {thresh} for score in {scores}])")
