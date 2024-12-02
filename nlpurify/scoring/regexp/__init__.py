@@ -7,3 +7,5 @@ shell ``grep`` command. The module extends its ability to use
 multiple expressions and bound them under a logical operator to find
 sequence and score the same.
 """
+
+from nlpurify.scoring.regexp.logical import LogicalRegexp

@@ -14,6 +14,7 @@ __version__ = "v2.1.0.dev0"
 
 # init-time options registrations
 from nlpurify.scoring import fuzzy
+from nlpurify.scoring import regexp
 
 from nlpurify.feature import (
     selection as feature_selection

@@ -9,3 +9,5 @@ from nlpurify.scoring.fuzzy import (
     fuzzy_score,
     LogicalFuzzy
 )
+
+from nlpurify.scoring.regexp import LogicalRegexp
