@@ -3,3 +3,5 @@
 """
 Utility Tools to Convert Raw Texts into a Structured Format
 """
+
+from nlpurify.preprocessing.normalization import normalize

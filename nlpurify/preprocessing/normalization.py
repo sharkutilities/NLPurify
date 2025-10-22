@@ -1,16 +1,53 @@
 # -*- encoding: utf-8 -*-
 
 """
-Module Involved to Normalization of Text
+Text normalization is the process of converting text into a
+consistent, standard, or "canonical" form. The goal is to reduce
+randomness and variations in the text data, which helps in reducing
+the overall number of unique words (the vocabulary size) and ensures
+that different forms of the same word are treated as one.
 
-The normalization of text involves cleaning of text/strings from
-unwanted characters like double spacing, double line breaks to single
-line breaks, etc. A single functional approach is designed to handle
-all such user's requests.
+The main goal is to provide a single function that can be used to
+achieve normalization goals - popular methods are text cases (setting
+lower or upper case to all the words), stopwords removal etc.
+
+.. code-block:: python
+
+    import NLPurify as nlpu
+
+    ...
+    text = " My   unCleaned text!!    "
+    print(nlpu.preprocessing.normalize(text, ...))
+    >> "my uncleaned text" # example of a cleaned text
+
+The core methods is kept simple, and generic arguments are used which
+are widely recognized/used by popular libraries.
 """
 
 import os
 import re
+
+from pydantic import BaseModel
+from abc import ABC, abstractmethod
+
+class BaseSettings(BaseModel, ABC):
+    """
+    Base Settings for Text Normalization with Field Validation
+    """
+
+    @abstractmethod
+    def apply(self, text : str) -> str:
+        pass
+
+
+def WhiteSpace(BaseSettings):
+    strip  : bool = True
+    lstrip : bool = True
+    rstrip : bool = True
+
+
+    def apply(self, text : str) -> str:
+        return text.strip()
 
 def strip_whitespace(text : str, **kwargs) -> str:
     """
@@ -88,16 +125,15 @@ def strip_whitespace(text : str, **kwargs) -> str:
 
 def normalize(text : str, strip : bool = True, **kwargs) -> str:
     """
-    Normalize a Text for AI/ML Operations to Reduce Randomness
-
     The normalization function uses the in-built string function like
     :attr:`.strip()`, :attr:`.replace()` etc. to return a cleaner
     version. The following arguments are available for more control.
     A normalized texts may have the following properties:
 
         * It may not start or end with a white space character,
-        * It may not have double space instead of single space, and
-        * It may not be spread across multiple lines (i.e., paragraphs).
+        * It may not have multiple spaces or spaces in the beginning
+          or end of the scentence, and
+        * It may not be spread in multiple lines (i.e., paragraph).
 
     All the above properties are desired, and can improve performance
     when used to train a large language model. Normalizaton of texts
@@ -110,12 +146,23 @@ def normalize(text : str, strip : bool = True, **kwargs) -> str:
         be single line, multi-line (example from "text area") and can
         have any type of escape characters.
 
-    :type  strip: bool
-    :param strip: The global attribute to clean and normalize text
-        of white spaces and multiple line breaks.
+    All the normalization techniques are put into one callable method
+    which in turn uses ``pydantic`` models for data validation and
+    settings management of each technique.
 
     Keyword Arguments
     -----------------
+
+    The keyword arguments are used to toggle on/off each of the
+    normalization techniques. Each technique is associated with an
+    underlying dictionary which is defined under respective models.
+
+        * **whitespace** (*WhiteSpace*): A normalization technique
+          that normalizes the white space from the underlying texts. A
+          text with multiple white spaces increases the processing
+          load of a NLP/LLM model that can hurt performance. White
+          spaces in a text includes spaces, tabs and new lines which
+          is the primary delimiter of a NLP/LLM model.
 
     All the arguments of :func:`nlpurify.normalize.strip_whitespace()`
     is accepted. In addition, the following are specific to this
