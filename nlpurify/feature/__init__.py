@@ -1,12 +1,12 @@
 # -*- encoding: utf-8 -*-
 
 """
-A Submodule Dedicated towards Feature Extraction/Selection Methods
+Feature Engineering to convert Texts into a Numerical Representation
 
-Feature extraction involves extraction of informations from a text
-like mobile number, email number etc., while selection is designed to
-select features by recursive removal of features which may not be
-useful in improving a NLP based model's performance.
+In NLP, a feature is a measurable,  numerical representation of a
+characteristic of raw text. Since machine learning models cannot
+understand raw text directly, we must convert unstructured text data
+into a structured, numerical format that these algorithms can process.
 """
 
 from nlpurify.feature import selection # noqa: F401, F403

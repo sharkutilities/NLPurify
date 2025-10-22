@@ -1,11 +1,18 @@
 # -*- encoding: utf-8 -*-
 
 """
-Text Cleaning and Feature Extraction Engine
+Utility for Natural Language Processing (NLP) Techniques
 
-The module provides text cleaning and feature extractions (like
-mobile number, url, etc.) from a Python string and also provides an
-one-stop solution library oriented towards text cleaning.
+Natural Language Processing (NLP) is the field of computer science to
+process, understand and manipulate human language which are typically
+well-defined and structured. The module is developed to provide a
+one-stop solution for different types of processings like - feature
+selection, feature extraction, pre-processing of texts (normalization,
+cleaning, etc.) to provide a cleaner version of text that is easy for
+computer to understand and integrate for further development.
+
+The module uses various different external libraries to simplify the
+tasks - check the module requirements for list of dependencies.
 """
 
 # ? package follows https://peps.python.org/pep-0440/
