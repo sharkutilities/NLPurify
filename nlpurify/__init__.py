@@ -27,7 +27,7 @@ from nlpurify.feature import (
     selection as feature_selection
 )
 
-from nlpurify.normalization import (
+from nlpurify.preprocessing.normalization import (
     normalize,
     strip_whitespace
 )

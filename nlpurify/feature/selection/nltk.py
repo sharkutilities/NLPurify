@@ -22,7 +22,7 @@ from typing import Union
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
-from nlpurify.normalization import normalize
+from nlpurify.preprocessing.normalization import normalize
 
 def tokenize_text(text : str, regexp : bool = False, vanilla : bool = False, **kwargs) -> list:
     """
