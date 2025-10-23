@@ -3,7 +3,7 @@
 <div align = "justify">
 
 ```{eval-rst}
-.. automodule:: nlpurify.normalization
+.. automodule:: nlpurify.preprocessing.normalization
 ```
 
 </div>
