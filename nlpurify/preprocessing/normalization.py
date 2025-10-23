@@ -122,9 +122,19 @@ class WhiteSpace(_base_normalize):
         return text
 
 
+class CaseFolding(_base_normalize):
+    upper : bool = False
+    lower : bool = True
+
+    def apply(self, text : str) -> str:
+        return text.upper() if self.upper else text.lower() if \
+            text.lower() else text
+
+
 def normalize(
         text : str,
         whitespace : bool = True,
+        casefolding : bool = True,
         **kwargs
     ) -> str:
     """
@@ -160,6 +170,12 @@ def normalize(
         performance. White spaces in a text includes spaces, tabs and
         new lines which is the primary delimiter of a NLP/LLM model.
 
+    :type  casefolding: bool
+    :param casefolding: Technique to normalize cases from a string to
+        a desired format, i.e., either all caps or all in small case.
+        It is always a good practice to convert all the raw text into
+        small case and then send for further modeling.
+
     Keyword Arguments
     -----------------
 
@@ -178,5 +194,13 @@ def normalize(
         if k in kwargs.keys()
     })
 
+    casefolding_model = CaseFolding(**{
+        k : kwargs.get(k, CaseFolding.model_fields[k].default)
+        for k in list(CaseFolding.model_fields.keys())
+        if k in kwargs.keys()
+    })
+
     text = whitespace_model.apply(text) if whitespace else text
+    text = casefolding_model.apply(text) if casefolding else text
+
     return text
