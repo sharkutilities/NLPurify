@@ -9,16 +9,10 @@ that different forms of the same word are treated as one.
 
 The main goal is to provide a single function that can be used to
 achieve normalization goals - popular methods are text cases (setting
-lower or upper case to all the words), stopwords removal etc.
-
-.. code-block:: python
-
-    import NLPurify as nlpu
-
-    ...
-    text = " My   unCleaned text!!    "
-    print(nlpu.preprocessing.normalize(text, ...))
-    >> "my uncleaned text" # example of a cleaned text
+lower or upper case to all the words), stopwords removal etc. The
+underlying function uses core Python string manipulation methods with
+additional third party libraries (like :mod:`nltk`) to achieve text
+normalization.
 
 The core methods is kept simple, and generic arguments are used which
 are widely recognized/used by popular libraries.
@@ -171,10 +165,11 @@ def normalize(
         **kwargs
     ) -> str:
     """
-    The normalization function uses the in-built string function like
-    :attr:`.strip()`, :attr:`.replace()` etc. to return a cleaner
-    version. The following arguments are available for more control.
-    A normalized texts may have the following properties:
+    The normalization function provides an one-stop solution for all
+    types of basic text normalization - white space, case folding and
+    stop words removal each of which can be toggled on/off as per
+    enduser's need. A normalized text may have the following
+    properties:
 
         * It may not start or end with a white space character,
         * It may not have multiple spaces or spaces in the beginning
@@ -183,8 +178,8 @@ def normalize(
 
     All the above properties are desired, and can improve performance
     when used to train a large language model. Normalizaton of texts
-    may also involve uniform case, typically :attr:`.lower()` that
-    can be used to create a word vector.
+    may also involve uniform case, typically :attr:`string.lower()`
+    that can be used to create a word vector.
 
     :type  text: str
     :param text: The base uncleaned text, all the operations are
@@ -193,8 +188,8 @@ def normalize(
         have any type of escape characters.
 
     All the normalization techniques are put into one callable method
-    which in turn uses ``pydantic`` models for data validation and
-    settings management of each technique.
+    which in turn uses :mod:`pydantic` models for data validation and
+    settings management of each technique. Below are the toggles:
 
     :type  whitespace: bool
     :param whitespace: A technique  that normalizes the white space
@@ -209,6 +204,12 @@ def normalize(
         It is always a good practice to convert all the raw text into
         small case and then send for further modeling.
 
+    :type  stopwords: bool
+    :param stopwords: A stop word is a common high-frequency word like
+        "the", "and", etc. that have no meaning of their own. Removing
+        the stop words can often improve the model efficiency, default
+        to True.
+
     Keyword Arguments
     -----------------
 
@@ -216,9 +217,44 @@ def normalize(
     normalization techniques. Each technique is associated with an
     underlying dictionary which is defined under respective models.
 
+    Please refer to the underlying functions for detailed keyword
+    arguments associated with each normalization techique(s) as below:
+
+        * **whitespace** : Associated with white space removal, check
+          the underlying validation class is :class:`WhiteSpace` for
+          more details.
+
+        * **casefolding** : Associated to set uniform text case,
+          check the underlying validation class is :class:`CaseFolding`
+          for more details.
+
+        * **stopwords** : Associated with white stop words removal,
+          check the underlying validation class is :class:`StopWords`
+          for more details.
+
+    Code Example(s)
+    ---------------
+
+    The default configuration is (most of the time) the best normal
+    form of the text, which is widely used. This can be achieved using
+    the default setting like below.
+
+    .. code-block:: python
+
+        import nlpurify as nlpu
+
+        ...
+        text = " My   unCleaned text!!    "
+        print(nlpu.preprocessing.normalize(text, ...))
+        >> "my uncleaned text" # example of a cleaned text
+
+    Return Data
+    -----------
+
     :rtype:  str
-    :return: Return a cleaner version of string free of white
-        characters as per user requirement.
+    :return: Return a cleaner version of string which is normalized
+        and treated thus providing a better performance for forward
+        NLP/LLM based modelling.
     """
 
     whitespace_model = WhiteSpace(**{
