@@ -30,7 +30,7 @@ import re
 from pydantic import BaseModel
 from abc import ABC, abstractmethod
 
-class BaseSettings(BaseModel, ABC):
+class _base_normalize(BaseModel, ABC):
     """
     Base Settings for Text Normalization with Field Validation
     """
@@ -40,90 +40,93 @@ class BaseSettings(BaseModel, ABC):
         pass
 
 
-def WhiteSpace(BaseSettings):
-    strip  : bool = True
-    lstrip : bool = True
-    rstrip : bool = True
-
-
-    def apply(self, text : str) -> str:
-        return text.strip()
-
-def strip_whitespace(text : str, **kwargs) -> str:
+class WhiteSpace(_base_normalize):
     """
-    Normalize Whitespaces in a Text Data
+    A Model to Normalize White Space (space, tabs, newlines) from Text
 
     Cleaning texts of white spaces like from beginning, end, and
     also multiple white spaces does not add any value to a text and
     should thus be removed to normalize the text.
 
-    :type  text: str
-    :param text: Original string which needs to be cleaned of
-        white spaces.
+    :param strip, lstrip, rstrip: Settings to strip white spaces from
+        beginning or end of the string for normalization. By default,
+        all the spaces are removed as they do not provide any
+        additional information and is mostly an error in typing text.
 
-    Keyword Arguments
-    -----------------
+    :param newline: Strip new line characters from a multiple line
+        (i.e., a paragraph or text from "text area") to get one single
+        text, defaults to True.
 
-    The function now provides the following additional keyword
-    arguments for control:
+    :param newlinesep: A string value which defaults to the systems'
+        default new line seperator ("\r\n" `CRLF` for windows, and
+        "\n" `LF` for *nix based systems) to replace from string.
 
-        * **lstrip** (*bool*): Left strip white space from the
-            provided text. Defaults to True. Setting any of the value
-            to ``False`` overrides the default ``.strip()` function.
-        * **rstrip** (*bool*): Right strip white space from the
-            provided text. Defaults to True. Setting any of the value
-            to ``False`` overrides the default ``.strip()` function.
-        * **multiple_whitespace** (*bool*): Delete multiple spaces
-            from the text. This uses the pattern cleaning using
-            regular expression. Defaults to True.
+    :param multispace: Replace multiple spaces which often reduces the
+        models' performance, defaults to True.
 
-    Example(s) & Use Case(s)
-    ------------------------
-
-    The function can be used to return a clean string of white spaces
-    as per user requirement:
+    A modular approach is now enabled which is derived from a base
+    normalization class. The usage is as below:
 
     .. code-block:: python
 
-        statement = "  this is an example  string with  white space "
+        import nlpurify as nlpu
+        model = nlpu.preprocessing.normalization.WhiteSpace()
 
-        # example of default behavior - remove all abnormal spaces::
-        print(f"`{nlpurify.strip_whitespace(statement)}`")
-        >>> `this is an example string with white space`
+        # let's define a multi-line uncleaned text
+        text = '''
+            This is a   uncleaned text    with lots of
+           extra white
+        space.
+        '''
 
-        # example of using either lstrip/rstrip/none as keywords
-        print(f"`{nlpurify.strip_whitespace(statement, lstrip = False)}`")
-        >>> ` this is an example string with white space`
+        print(model.apply(text)) # uses default settings
+        >> This is a uncleaned text with lots of extra white space.
 
-        # example of setting multiple_whitespace
-        print(f"`{nlpurify.strip_whitespace(statement, multiple_whitespace = False)}`")
-        >>> `this is an example  string with  white space`
-
-    :rtype:  str
-    :return: Return a cleaner version of string free of white
-        characters as per user requirement.
+    The model does not accept additional arguments and the function
+    ``.apply()`` is used to clean and normalize white space from text.
     """
 
-    lstrip = kwargs.get("lstrip", True)
-    rstrip = kwargs.get("rstrip", True)
-    multiple_whitespace = kwargs.get("multiple_whitespace", True)
+    strip   : bool = True
+    lstrip  : bool = True
+    rstrip  : bool = True
+    newline : bool = True
 
-    if all([lstrip, rstrip]):
-        # when both the condition is true, then default to `.strip()`
-        text = text.strip()
-    else:
-        # we cannot use the default strip function and should be
-        # handled seperately using each conditional statement
-        text = text.lstrip() if lstrip else text.rstrip() if rstrip else text
+    # ? if new line is true, then also allow to provide new line
+    # which defaults to the operating system default
+    newlinesep : str = os.linesep
 
-    # clean the text of multiple white spaces using regular expression
-    pattern = re.compile(r"\s+") # one or more white space character
-    text = pattern.sub(" ", text) if multiple_whitespace else text
-
-    return text
+    # ? remove multiple whitespace - uses regual expressions
+    multispace : bool = True
 
 
-def normalize(text : str, strip : bool = True, **kwargs) -> str:
+    def apply(self, text : str) -> str:
+        pattern = re.compile(r"\s+") # one/more white spaces
+
+        # first - strip the white space from beginning and end of text
+        if self.strip:
+            text = text.strip()
+        elif self.lstrip:
+            text = text.lstrip()
+        elif self.rstrip:
+            text = text.rstrip()
+        else:
+            pass # no strip processing
+
+        # second, remove new line characters from the text
+        text = text.replace(self.newlinesep, " ") if self.newline \
+            else text
+
+        # third remove multiple white spaces from the string
+        text = pattern.sub(" ", text) if self.multispace else text
+
+        return text
+
+
+def normalize(
+        text : str,
+        whitespace : bool = True,
+        **kwargs
+    ) -> str:
     """
     The normalization function uses the in-built string function like
     :attr:`.strip()`, :attr:`.replace()` etc. to return a cleaner
@@ -150,6 +153,13 @@ def normalize(text : str, strip : bool = True, **kwargs) -> str:
     which in turn uses ``pydantic`` models for data validation and
     settings management of each technique.
 
+    :type  whitespace: bool
+    :param whitespace: A technique  that normalizes the white space
+        from the underlying texts. A text with multiple white spaces
+        increases the processing load of a NLP/LLM model that can hurt
+        performance. White spaces in a text includes spaces, tabs and
+        new lines which is the primary delimiter of a NLP/LLM model.
+
     Keyword Arguments
     -----------------
 
@@ -157,65 +167,16 @@ def normalize(text : str, strip : bool = True, **kwargs) -> str:
     normalization techniques. Each technique is associated with an
     underlying dictionary which is defined under respective models.
 
-        * **whitespace** (*WhiteSpace*): A normalization technique
-          that normalizes the white space from the underlying texts. A
-          text with multiple white spaces increases the processing
-          load of a NLP/LLM model that can hurt performance. White
-          spaces in a text includes spaces, tabs and new lines which
-          is the primary delimiter of a NLP/LLM model.
-
-    All the arguments of :func:`nlpurify.normalize.strip_whitespace()`
-    is accepted. In addition, the following are specific to this
-    function:
-
-        * **strip_line_breaks** (*bool*): Strip line breaks and
-            returns a single line statement. This uses the os default
-            which is either "CR LF" for windows or "LF" for *nix
-            based systems. However, the default value can be override
-            using keyword argument :attr:`line_break_seperator`.
-            Defaults to True.
-
-        * **line_break_seperator** (*str*): The end line character
-          which is either "\\r\\n" for windows or "\\n" for *nix
-          based systems. By default defaults to running operating
-          systems default.
-
-        * **strip_tab_space** (*bool*): Strip a line of tab character,
-            defaults to True.
-
-    Example(s) & Use Case(s)
-    ------------------------
-
-    The function returns all scentence to default lower case, and
-    strips the text filed of white spaces and multiple lines into one
-    single scentence.
-
-    .. code-block:: python
-
-        statement = '''
-        thIs Is an example  string with  \t\nwhite space
-
-        loreememm ipsum dolor
-
-        '''
-
-        # default behavior removes all into single statement
-        print(f"`{nlpurify.normalize(statement)}`")
-        >>> `this is an example string with white space loreememm ipsum dolor`
-
     :rtype:  str
     :return: Return a cleaner version of string free of white
         characters as per user requirement.
     """
 
-    line_break_seperator = kwargs.get("line_break_seperator", os.linesep)
+    whitespace_model = WhiteSpace(**{
+        k : kwargs.get(k, WhiteSpace.model_fields[k].default)
+        for k in list(WhiteSpace.model_fields.keys())
+        if k in kwargs.keys()
+    })
 
-    # normalize text of line breaks based on os/user defined
-    text = text.replace(line_break_seperator, " ") \
-        if kwargs.get("strip_line_breaks", True) else text
-    text = text.replace(line_break_seperator, " ") \
-        if kwargs.get("strip_tab_space", True) else text
-
-    # ! 💣 always return the text in lowercase instead of user choice
-    # in addition, run the white space removal logic to normalize the text
-    return strip_whitespace(text, **kwargs).lower() if strip else text.lower()
+    text = whitespace_model.apply(text) if whitespace else text
+    return text

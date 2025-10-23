@@ -20,14 +20,10 @@ tasks - check the module requirements for list of dependencies.
 __version__ = "v2.1.0.dev0"
 
 # init-time options registrations
+from nlpurify import preprocessing
+
 from nlpurify.scoring import fuzzy
 from nlpurify.scoring import regexp
 
-from nlpurify.feature import (
-    selection as feature_selection
-)
-
-from nlpurify.preprocessing.normalization import (
-    normalize,
-    strip_whitespace
-)
+from nlpurify.feature import selection as feature_selection
+from nlpurify.feature import extraction as feature_extraction
