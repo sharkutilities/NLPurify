@@ -30,6 +30,9 @@ import re
 from pydantic import BaseModel
 from abc import ABC, abstractmethod
 
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
 class _base_normalize(BaseModel, ABC):
     """
     Base Settings for Text Normalization with Field Validation
@@ -131,10 +134,39 @@ class CaseFolding(_base_normalize):
             text.lower() else text
 
 
+class StopWords(_base_normalize):
+    language   : str = "english"
+    extrawords : list = []
+
+    # ! by default, nltk library provides stopwords in lower case
+    # however, we can override and set the value as per our case needs
+    stopwords_in_uppercase : bool = False
+
+    # ! removal of stop words is associated with word tokenization
+    tokenize : bool = True
+
+
+    def apply(self, text : str) -> str:
+        stopwords_ = stopwords.words(self.language) + self.extrawords
+        tokenized_ = word_tokenize(
+            text, language = self.language, preserve_line = False
+        ) if self.tokenize else text.split()
+
+        # case folding of stopwords in upper/lower case as per need
+        stopwords_ = list(map(
+            lambda x : x.upper(), stopwords_
+        )) if self.stopwords_in_uppercase else stopwords_
+
+        return " ".join([
+            word for word in tokenized_ if word not in stopwords_
+        ])
+
+
 def normalize(
         text : str,
         whitespace : bool = True,
         casefolding : bool = True,
+        stopwords : bool = True,
         **kwargs
     ) -> str:
     """
@@ -200,7 +232,14 @@ def normalize(
         if k in kwargs.keys()
     })
 
+    stopwords_model = StopWords(**{
+        k : kwargs.get(k, StopWords.model_fields[k].default)
+        for k in list(StopWords.model_fields.keys())
+        if k in kwargs.keys()
+    })
+
     text = whitespace_model.apply(text) if whitespace else text
     text = casefolding_model.apply(text) if casefolding else text
+    text = stopwords_model.apply(text) if stopwords else text
 
     return text
