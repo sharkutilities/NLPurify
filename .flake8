@@ -1,12 +1,13 @@
 [flake8]
   per-file-ignores =
     # add per line ignores, if required
+    # F401 '... import xyz' used; imported but unused
     # F403 '... import *' used; unable to detect undefined names
-    nlpurify/__init__.py: F403
-    nlpurify/feature/__init__.py: F403
-    nlpurify/feature/extraction/__init__.py: F403
-    nlpurify/feature/selection/__init__.py: F403
-    nlpurify/preprocessing/__init__.py: F403
+    nlpurify/__init__.py: F401, F403
+    nlpurify/feature/__init__.py: F401, F403
+    nlpurify/feature/extraction/__init__.py: F401, F403
+    nlpurify/feature/selection/__init__.py: F401, F403
+    nlpurify/preprocessing/__init__.py: F401, F403
   max-line-length = 88
 
   ## the following definations can be ignored
@@ -16,4 +17,5 @@
   #   > also sometimes violated by black: https://github.com/psf/black
   # E221 multiple spaces before operator
   # E251 unexpected spaces around keyword / parameter equals
-  ignore = E203, E221, E251
+  # E261 at least two spaces before inline comment
+  ignore = E203, E221, E251, E261
