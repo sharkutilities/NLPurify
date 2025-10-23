@@ -21,8 +21,8 @@ are widely recognized/used by popular libraries.
 import os
 import re
 
-from pydantic import BaseModel
 from abc import ABC, abstractmethod
+from pydantic import BaseModel, Field
 
 from nltk.corpus import stopwords
 
@@ -84,7 +84,9 @@ class WhiteSpace(_base_normalize):
     ``.apply()`` is used to clean and normalize white space from text.
     """
 
-    strip   : bool = True
+    strip   : bool = Field(
+        True, help = "Strip of trailing white spaces from text."
+    )
     lstrip  : bool = True
     rstrip  : bool = True
     newline : bool = True
