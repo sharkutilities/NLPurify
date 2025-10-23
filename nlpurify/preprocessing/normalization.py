@@ -31,7 +31,8 @@ from pydantic import BaseModel
 from abc import ABC, abstractmethod
 
 from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
+
+from nlpurify.preprocessing.utils import WordTokenize
 
 class _base_normalize(BaseModel, ABC):
     """
@@ -144,13 +145,13 @@ class StopWords(_base_normalize):
 
     # ! removal of stop words is associated with word tokenization
     tokenize : bool = True
+    tokenize_config : WordTokenize = WordTokenize()
 
 
     def apply(self, text : str) -> str:
         stopwords_ = stopwords.words(self.language) + self.extrawords
-        tokenized_ = word_tokenize(
-            text, language = self.language, preserve_line = False
-        ) if self.tokenize else text.split()
+        tokenized_ = self.tokenize_config.apply(text) \
+            if self.tokenize else text.split()
 
         # case folding of stopwords in upper/lower case as per need
         stopwords_ = list(map(
