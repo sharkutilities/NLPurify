@@ -183,8 +183,7 @@ def normalize(
     may also involve uniform case, typically :attr:`string.lower()`
     that can be used to create a word vector.
 
-    :type  text: str
-    :param text: The base uncleaned text, all the operations are
+    :param str text: The base uncleaned text, all the operations are
         done on this text to return a cleaner version. The string can
         be single line, multi-line (example from "text area") and can
         have any type of escape characters.
@@ -212,8 +211,7 @@ def normalize(
         the stop words can often improve the model efficiency, default
         to True.
 
-    Keyword Arguments
-    -----------------
+    .. rubric:: Keyword Arguments
 
     The keyword arguments are used to toggle on/off each of the
     normalization techniques. Each technique is associated with an
@@ -234,8 +232,7 @@ def normalize(
           check the underlying validation class is :class:`StopWords`
           for more details.
 
-    Code Example(s)
-    ---------------
+    .. rubric:: Code Example(s)
 
     The default configuration is (most of the time) the best normal
     form of the text, which is widely used. This can be achieved using
@@ -250,8 +247,7 @@ def normalize(
         print(nlpu.preprocessing.normalize(text, ...))
         >> "my uncleaned text" # example of a cleaned text
 
-    Return Data
-    -----------
+    .. rubric:: Return Data
 
     :rtype:  str
     :return: Return a cleaner version of string which is normalized
