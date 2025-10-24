@@ -28,7 +28,7 @@ extensions = [
     'myst_parser',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
-    'autodoc_pydantic'
+    'sphinxcontrib.autodoc_pydantic'
 ]
 
 templates_path = ['_templates']
@@ -42,6 +42,10 @@ autodoc_default_options = {
     "private-members": True
 }
 
+# -- Options for Autodoc Pydantic -------------------------------------------
+# https://autodoc-pydantic.readthedocs.io/en/stable/users/installation.html
+autodoc_pydantic_model_show_json = True
+autodoc_pydantic_settings_show_json = False
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
