@@ -7,7 +7,7 @@
 ```
 
 ```{eval-rst}
-.. autopydantic_settings:: nlpurify.preprocessing.normalization_model
+.. automodule:: nlpurify.preprocessing.normalization_model
 ```
 
 </div>

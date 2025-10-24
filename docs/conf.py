@@ -27,8 +27,7 @@ release = nlpurify.__version__
 extensions = [
     'myst_parser',
     'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
-    'sphinxcontrib.autodoc_pydantic'
+    'sphinx.ext.autosummary'
 ]
 
 templates_path = ['_templates']
