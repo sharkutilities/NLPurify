@@ -17,7 +17,7 @@ tasks - check the module requirements for list of dependencies.
 
 # ? package follows https://peps.python.org/pep-0440/
 # ? https://python-semver.readthedocs.io/en/latest/advanced/convert-pypi-to-semver.html
-__version__ = "v2.1.0.dev0"
+__version__ = "v2.0.0.b0"
 
 # init-time options registrations
 from nlpurify import preprocessing
