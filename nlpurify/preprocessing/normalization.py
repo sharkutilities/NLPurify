@@ -46,22 +46,6 @@ class WhiteSpace(_base_normalize):
     also multiple white spaces does not add any value to a text and
     should thus be removed to normalize the text.
 
-    :param strip, lstrip, rstrip: Settings to strip white spaces from
-        beginning or end of the string for normalization. By default,
-        all the spaces are removed as they do not provide any
-        additional information and is mostly an error in typing text.
-
-    :param newline: Strip new line characters from a multiple line
-        (i.e., a paragraph or text from "text area") to get one single
-        text, defaults to True.
-
-    :param newlinesep: A string value which defaults to the systems'
-        default new line seperator ("\r\n" `CRLF` for windows, and
-        "\n" `LF` for *nix based systems) to replace from string.
-
-    :param multispace: Replace multiple spaces which often reduces the
-        models' performance, defaults to True.
-
     A modular approach is now enabled which is derived from a base
     normalization class. The usage is as below:
 
@@ -78,25 +62,52 @@ class WhiteSpace(_base_normalize):
         '''
 
         print(model.apply(text)) # uses default settings
-        >> This is a uncleaned text with lots of extra white space.
+        >> "This is a uncleaned text with lots of extra white space."
 
     The model does not accept additional arguments and the function
     ``.apply()`` is used to clean and normalize white space from text.
+
+    .. rubric:: Additional Note(s)
+
+    The new line seperator is default to system, for windows based
+    system the seperator is "\r\n" (i.e., ``CR LF`` notation), while
+    for *nix based system it is "\n" (i.e., ``LF`` notation) default.
     """
 
-    strip   : bool = Field(
-        True, help = "Strip of trailing white spaces from text."
+    strip : bool = Field(
+        default = True,
+        description = "Strip of trailing white spaces from text."
+
     )
-    lstrip  : bool = True
-    rstrip  : bool = True
-    newline : bool = True
+    lstrip : bool = Field(
+        default = True,
+        description = "Strip white spaces from beginning of text."
+
+    )
+    rstrip : bool = Field(
+        default = True,
+        description = "Strip white spaces from end of text."
+
+    )
+    newline : bool = Field(
+        default = True,
+        description = "Strip any new line characters from text."
+
+    )
 
     # ? if new line is true, then also allow to provide new line
     # which defaults to the operating system default
-    newlinesep : str = os.linesep
+    newlinesep : str = Field(
+        default = os.linesep,
+        description = "Default line seperator based on system."
+    )
 
     # ? remove multiple whitespace - uses regual expressions
-    multispace : bool = True
+    multispace : bool = Field(
+        default = True,
+        description = "Remove multiple spaces from text using regexp."
+
+    )
 
 
     def apply(self, text : str) -> str:
@@ -183,7 +194,8 @@ def normalize(
     may also involve uniform case, typically :attr:`string.lower()`
     that can be used to create a word vector.
 
-    :param str text: The base uncleaned text, all the operations are
+    :type  text: str
+    :param text: The base uncleaned text, all the operations are
         done on this text to return a cleaner version. The string can
         be single line, multi-line (example from "text area") and can
         have any type of escape characters.
@@ -220,17 +232,19 @@ def normalize(
     Please refer to the underlying functions for detailed keyword
     arguments associated with each normalization techique(s) as below:
 
-        * **whitespace** : Associated with white space removal, check
-          the underlying validation class is :class:`WhiteSpace` for
-          more details.
+        *   **whitespace** : Associated with white space removal, the
+            function takes in arguments associated with native string
+            functions of Python, check :class:`WhiteSpace` for more
+            informations.
 
-        * **casefolding** : Associated to set uniform text case,
-          check the underlying validation class is :class:`CaseFolding`
-          for more details.
+        *   **casefolding** : Associated to set uniform text case, the
+            model either converts all the string to upper case or in
+            lower case using Python native string functions, for
+            more details check signature of :class:`CaseFolding` class.
 
-        * **stopwords** : Associated with white stop words removal,
-          check the underlying validation class is :class:`StopWords`
-          for more details.
+        *   **stopwords** : Associated with white stop words removal,
+            check the underlying validation class is :class:`StopWords`
+            for more details.
 
     .. rubric:: Code Example(s)
 
