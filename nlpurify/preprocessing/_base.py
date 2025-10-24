@@ -4,7 +4,6 @@
 Base Class and Field Validators for Preprocessing of Raw Texts
 """
 
-from typing import Any
 from abc import ABC, abstractmethod
 from pydantic import BaseModel, Field, model_validator
 
@@ -55,7 +54,7 @@ class NormalizerBaseModel(BaseModel, ABC):
 
     @model_validator(mode = "before")
     @classmethod
-    def __set_name__(cls, data : Any) -> Any:
+    def __set_name__(cls, data : dict) -> dict:
         """
         A private method to define populate the name of the model
         which when not defined defaults to the class name.
@@ -67,13 +66,3 @@ class NormalizerBaseModel(BaseModel, ABC):
             data["name"] = name
 
         return data
-
-
-    class Config:
-        """
-        Pydantic configuration, which when used with an instance of an
-        abstract class handles the potential validation errors with
-        complex data types of fields.
-        """
-
-        arbitrary_types_allowed = True
