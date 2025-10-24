@@ -163,12 +163,49 @@ class WhiteSpace(NormalizerBaseModel):
 
 
 class CaseFolding(NormalizerBaseModel):
+    """
+    A Model to Normalize Case Folding from Texts
+
+    Case folding from raw data source is often in title case, or is in
+    a mixed case which hinder the NLP/LLM model's performance. The
+    general convention is to convert all to lower cases using native
+    Python function :func:`lower()` which is available for strings.
+
+    The class provides a pydantic model which does the same thing and
+    when used in a pipeline provides robust and dynamic type checking
+    and adheres to the normalization process.
+
+    :param upper, lower: Either set the text to upper case, or to
+        lower case as per user choice. Default configuration sets the
+        value to lower case.
+    """
+
     upper : bool = False
     lower : bool = True
 
     def apply(self, text : str) -> str:
+        """
+        Normalize the text into either all small case or upper case
+        as per the forward models' need.
+        """
+
         return text.upper() if self.upper else text.lower() if \
             text.lower() else text
+
+    @model_validator(mode = "after")
+    def model_validator(self) -> object:
+        """
+        Validate all the attributes of the class, and raise an error
+        when the validation fails for any given combination below.
+
+        :raises AssertionError: Error is raised when both the
+            attribute ``upper`` and ``lower`` is set to True.
+        """
+
+        assert sum([self.upper, self.lower]) == 1, \
+            "Both the value cannot be True."
+
+        return self
 
 
 class StopWords(NormalizerBaseModel):
