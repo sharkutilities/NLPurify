@@ -20,9 +20,10 @@ are widely recognized/used by popular libraries.
 
 import os
 import re
+import warnings
 
-from pydantic import Field
 from nltk.corpus import stopwords
+from pydantic import Field, model_validator
 
 from nlpurify.preprocessing.utils import WordTokenize
 from nlpurify.preprocessing._base import NormalizerBaseModel
@@ -34,6 +35,22 @@ class WhiteSpace(NormalizerBaseModel):
     Cleaning texts of white spaces like from beginning, end, and
     also multiple white spaces does not add any value to a text and
     should thus be removed to normalize the text.
+
+    :param strip, lstrip, rstrip: Settings to strip white spaces from
+        beginning or end of the string for normalization. By default,
+        all the spaces are removed as they do not provide any
+        additional information and is mostly an error in typing text.
+
+    :param newline: Strip new line characters from a multiple line
+        (i.e., a paragraph or text from "text area") to get one single
+        text, defaults to True.
+
+    :param newlinesep: A string value which defaults to the systems'
+        default new line seperator ("\r\n" `CRLF` for windows, and
+        "\n" `LF` for *nix based systems) to replace from string.
+
+    :param multispace: Replace multiple spaces which often reduces the
+        models' performance, defaults to True.
 
     A modular approach is now enabled which is derived from a base
     normalization class. The usage is as below:
@@ -55,31 +72,25 @@ class WhiteSpace(NormalizerBaseModel):
 
     The model does not accept additional arguments and the function
     ``.apply()`` is used to clean and normalize white space from text.
-
-    .. rubric:: Additional Note(s)
-
-    The new line seperator is default to system, for windows based
-    system the seperator is "\r\n" (i.e., ``CR LF`` notation), while
-    for *nix based system it is "\n" (i.e., ``LF`` notation) default.
     """
 
     strip : bool = Field(
-        default = True,
+        True,
         description = "Strip of trailing white spaces from text."
-
     )
+
     lstrip : bool = Field(
-        default = True,
+        True,
         description = "Strip white spaces from beginning of text."
-
     )
+
     rstrip : bool = Field(
-        default = True,
+        True,
         description = "Strip white spaces from end of text."
-
     )
+
     newline : bool = Field(
-        default = True,
+        True,
         description = "Strip any new line characters from text."
 
     )
@@ -95,7 +106,6 @@ class WhiteSpace(NormalizerBaseModel):
     multispace : bool = Field(
         default = True,
         description = "Remove multiple spaces from text using regexp."
-
     )
 
 
@@ -122,6 +132,34 @@ class WhiteSpace(NormalizerBaseModel):
             text = pattern.sub(" ", text)
 
         return text
+
+
+    @model_validator(mode = "after")
+    def model_validator(self) -> object:
+        """
+        Pydantic generic model validator which validates all the
+        fields using the self.attribute parameter and is generic to
+        the class.
+        """
+
+        s, ls, rs = self.strip, self.lstrip, self.rstrip
+
+        if not s and all([ls, rs]):
+            warnings.warn(
+                "Both `lstrip`` and ``rstip`` is True. While "
+                "the ``strip`` value is False, which results "
+                "in same result when ``strip == True`` (default)."
+            )
+
+        if s and not all([ls, rs]):
+            warnings.warn(
+                "The ``strip`` is set to True, while one of "
+                f"``lstrip == {ls}`` or ``rstrip == {rs}`` "
+                "is set to False, which is ambiguous as "
+                "attribute strip always has a precedence."
+            )
+
+        return self
 
 
 class CaseFolding(NormalizerBaseModel):
