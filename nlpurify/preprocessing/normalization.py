@@ -209,8 +209,34 @@ class CaseFolding(NormalizerBaseModel):
 
 
 class StopWords(NormalizerBaseModel):
+    """
+    Normalize Raw Texts from Stop Words using NLTK Corpus
+
+    The model uses the :mod:`nltk.corpus` to check the valid stopwords
+    that when removed from a text improves an NLP/LLM models'
+    performance. By default, the model is set to use the stopwords in
+    the English language.
+
+    :param language: A valid language name which is available and
+        defined under :func:`nltk.corpus.stopwords`, defaults to the
+        English language.
+
+    :param extrawords: The model gives the flexibility to add extra
+        words which will be treated as stopwords which are not already
+        defined under the :func:`nltk.corpus.stopwords` function. This
+        can be helpful in dynamic debuging and quick manipulation of
+        text to check forward models performance.
+
+    :param excludewords: Opposite to ``extrawords`` this attribute
+        helps in updating the stopwords by removing/excluding words
+        from already defined set.
+    """
+
     language   : str = "english"
     extrawords : list = []
+
+    # ..versionadded:: 2025-10-24 - also allow words to be excluded
+    excludewords : list = []
 
     # ! by default, nltk library provides stopwords in lower case
     # however, we can override and set the value as per our case needs
@@ -222,18 +248,23 @@ class StopWords(NormalizerBaseModel):
 
 
     def apply(self, text : str) -> str:
-        stopwords_ = stopwords.words(self.language) + self.extrawords
         tokenized_ = self.tokenize_config.apply(text) \
             if self.tokenize else text.split()
 
-        # case folding of stopwords in upper/lower case as per need
-        stopwords_ = list(map(
-            lambda x : x.upper(), stopwords_
-        )) if self.stopwords_in_uppercase else stopwords_
-
         return " ".join([
-            word for word in tokenized_ if word not in stopwords_
+            word for word in tokenized_ if word not in self.stopwords_
         ])
+
+
+    @property
+    def stopwords_(self) -> list:
+        return list(map(
+            lambda x : x.upper() if self.stopwords_in_uppercase else x.lower(),
+            (
+                set(stopwords.words(self.language) + self.extrawords)
+                - set(self.excludewords)
+            )
+        ))
 
 
 def normalize(
