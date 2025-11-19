@@ -210,21 +210,27 @@ class CaseFolding(NormalizerBaseModel):
     A Model to Normalize Case Folding from Texts
 
     Case folding from raw data source is often in title case, or is in
-    a mixed case which hinder the NLP/LLM model's performance. The
+    a mixed case which may hinder the NLP/LLM model's performance. The
     general convention is to convert all to lower cases using native
     Python function :func:`lower()` which is available for strings.
-
-    The class provides a pydantic model which does the same thing and
-    when used in a pipeline provides robust and dynamic type checking
-    and adheres to the normalization process.
-
-    :param upper, lower: Either set the text to upper case, or to
-        lower case as per user choice. Default configuration sets the
-        value to lower case.
     """
 
-    upper : bool = False
-    lower : bool = True
+    upper : bool = Field(
+        False,
+        description = """
+        Convert the text to upper case and return the text without
+        altering other things. Defaults to False, the class converts
+        the text to lower case which is recommended in LLM/NLP models.
+        """
+    )
+
+    lower : bool = Field(
+        True,
+        description = """
+        Convert the contents fof the text to lower case (default) for
+        an easy forward integration with LLM/NLP based models.
+        """
+    )
 
     def apply(self, text : str) -> str:
         """
@@ -259,27 +265,51 @@ class StopWords(NormalizerBaseModel):
     that when removed from a text improves an NLP/LLM models'
     performance. By default, the model is set to use the stopwords in
     the English language.
-
-    :param language: A valid language name which is available and
-        defined under :func:`nltk.corpus.stopwords`, defaults to the
-        English language.
-
-    :param extrawords: The model gives the flexibility to add extra
-        words which will be treated as stopwords which are not already
-        defined under the :func:`nltk.corpus.stopwords` function. This
-        can be helpful in dynamic debuging and quick manipulation of
-        text to check forward models performance.
-
-    :param excludewords: Opposite to ``extrawords`` this attribute
-        helps in updating the stopwords by removing/excluding words
-        from already defined set.
     """
 
-    language   : str = "english"
-    extrawords : list = []
+    language : str = Field(
+        "english",
+        description = """
+        A valid language name which is available and defined under
+        :func:`nltk.corpus.stopwords`, defaults to the English. To see
+        a valid list of languages follow below.
+
+        .. code-block:: python
+
+            import nltk
+
+            # download the corpus if not already available
+            # nltk.download("stopwords")
+            from nltk.corpus import stopwords
+
+            # once downloaded and available, check available list:
+            print(stopwords.fileids())
+
+        The code block is dependent on :mod:`nltk` for more information
+        check `docs <https://www.nltk.org/index.html>`_.
+        """
+    )
+
+    extrawords : list = Field(
+        [],
+        description = """
+        The model gives the flexibility to add extra words which will
+        be treated as stopwords which are not already defined under
+        the :func:`nltk.corpus.stopwords` function. This can be
+        helpful in dynamic debuging and quick manipulation of text to
+        check forward models performance.
+        """
+    )
 
     # ..versionadded:: 2025-10-24 - also allow words to be excluded
-    excludewords : list = []
+    excludewords : list = Field(
+        [],
+        description = """
+        Opposite to ``extrawords`` this attribute helps in updating
+        the stopwords by removing/excluding words from the already
+        defined words in ``stopwords.words(self.language)`` list.
+        """
+    )
 
     # ! by default, nltk library provides stopwords in lower case
     # however, we can override and set the value as per our case needs
