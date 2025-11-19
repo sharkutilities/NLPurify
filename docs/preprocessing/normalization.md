@@ -4,6 +4,7 @@
 
 ```{eval-rst}
 .. automodule:: nlpurify.preprocessing.normalization
+  :member-order: bysource
 ```
 
 </div>
