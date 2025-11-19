@@ -36,22 +36,6 @@ class WhiteSpace(NormalizerBaseModel):
     also multiple white spaces does not add any value to a text and
     should thus be removed to normalize the text.
 
-    :param strip, lstrip, rstrip: Settings to strip white spaces from
-        beginning or end of the string for normalization. By default,
-        all the spaces are removed as they do not provide any
-        additional information and is mostly an error in typing text.
-
-    :param newline: Strip new line characters from a multiple line
-        (i.e., a paragraph or text from "text area") to get one single
-        text, defaults to True.
-
-    :param newlinesep: A string value which defaults to the systems'
-        default new line seperator ("\r\n" `CRLF` for windows, and
-        "\n" `LF` for *nix based systems) to replace from string.
-
-    :param multispace: Replace multiple spaces which often reduces the
-        models' performance, defaults to True.
-
     A modular approach is now enabled which is derived from a base
     normalization class. The usage is as below:
 
@@ -76,22 +60,69 @@ class WhiteSpace(NormalizerBaseModel):
 
     strip : bool = Field(
         True,
-        description = "Strip of trailing white spaces from text."
+        description = """
+        Strip white spaces from both the beginning and the end of the
+        string for normalization. By default, all the spaces are
+        removed as they do not provide any additional information for
+        a LLM/NLP based models and reduces token counts.
+
+        When the attribute is set to ``True`` the alternate parameters
+        :attr:`lstrip` and :attr:`rstrip` is ignored, check model
+        validator for more information. This uses the Python in-built
+        string function as in example below:
+
+        .. code-block:: python
+
+            text = " this is a long text   "
+            print(text.strip())
+            >> 'this is a long text'
+
+        Further customization like specifying alternate set of
+        characters to be removed from the string is also supported by
+        using the :attr:`strip_chars` attribute, for more information
+        check `docs <https://docs.python.org/3/library/stdtypes.html#str.strip>`_.
+        """
     )
 
     lstrip : bool = Field(
         True,
-        description = "Strip white spaces from beginning of text."
+        description = """
+        When set to true (default) removes the leading white characters
+        from the string, or specify alternate set using
+        :attr:`strip_chars` attribute.
+        """
     )
 
     rstrip : bool = Field(
         True,
-        description = "Strip white spaces from end of text."
+        description = """
+        When set to true (default) removes the trailing white
+        characters from the string, or specify alternate set using
+        :attr:`strip_chars` attribute.
+        """
+    )
+
+    strip_chars : str = Field(
+        None,
+        description = """
+        Custom set characters to be removed from the string. The
+        argument is not a "prefix" or a "suffix" but a combination of
+        all the values to be stripped. Check
+        `docs <https://docs.python.org/3/library/stdtypes.html#str.strip>`_
+        for more information.
+        """
     )
 
     newline : bool = Field(
         True,
-        description = "Strip any new line characters from text."
+        description = """
+        Strip new line characters from a multiple line (i.e., a
+        paragraph or text from "text area") to get one single text,
+        defaults to True. By default, :attr:`strip` removes new lines
+        from the beginning and end, while this argument using string
+        replace method to remove within lines - useful when the source
+        text is paragraphed and needs to be cleaned.
+        """
 
     )
 
@@ -99,13 +130,20 @@ class WhiteSpace(NormalizerBaseModel):
     # which defaults to the operating system default
     newlinesep : str = Field(
         default = os.linesep,
-        description = "Default line seperator based on system."
+        description = """
+        A string value which defaults to the systems' default new line
+        seperator ("\\r\\n" `CRLF` for windows, and "\\n" `LF` for
+        *nix based systems) to replace from string.
+        """
     )
 
     # ? remove multiple whitespace - uses regual expressions
     multispace : bool = Field(
         default = True,
-        description = "Remove multiple spaces from text using regexp."
+        description = """
+        Replace multiple spaces using regular expressions, which often
+        reduces the models' performance, defaults to True.
+        """
     )
 
 
@@ -114,14 +152,14 @@ class WhiteSpace(NormalizerBaseModel):
 
         # first - strip the white space from beginning and end of text
         if self.strip:
-            text = text.strip()
+            text = text.strip(chars = self.strip_chars)
         else:
             if self.lstrip:
-                text = text.lstrip()
+                text = text.lstrip(chars = self.strip_chars)
             elif self.rstrip:
-                text = text.strip()
+                text = text.strip(chars = self.strip_chars)
             else:
-                pass # todo raise invalid warning for combination
+                pass # error is raised during model assertion
 
         # second, remove new line characters from the text
         if self.newline:
@@ -140,6 +178,11 @@ class WhiteSpace(NormalizerBaseModel):
         Pydantic generic model validator which validates all the
         fields using the self.attribute parameter and is generic to
         the class.
+
+        :raises UserWarning: A warning is raised when the parameter
+            does not follow specified directive. It is recommended to
+            check the attribute settings before using :func:`.apply()`
+            or it might generated unwanted output.
         """
 
         s, ls, rs = self.strip, self.lstrip, self.rstrip
@@ -167,21 +210,27 @@ class CaseFolding(NormalizerBaseModel):
     A Model to Normalize Case Folding from Texts
 
     Case folding from raw data source is often in title case, or is in
-    a mixed case which hinder the NLP/LLM model's performance. The
+    a mixed case which may hinder the NLP/LLM model's performance. The
     general convention is to convert all to lower cases using native
     Python function :func:`lower()` which is available for strings.
-
-    The class provides a pydantic model which does the same thing and
-    when used in a pipeline provides robust and dynamic type checking
-    and adheres to the normalization process.
-
-    :param upper, lower: Either set the text to upper case, or to
-        lower case as per user choice. Default configuration sets the
-        value to lower case.
     """
 
-    upper : bool = False
-    lower : bool = True
+    upper : bool = Field(
+        False,
+        description = """
+        Convert the text to upper case and return the text without
+        altering other things. Defaults to False, the class converts
+        the text to lower case which is recommended in LLM/NLP models.
+        """
+    )
+
+    lower : bool = Field(
+        True,
+        description = """
+        Convert the contents fof the text to lower case (default) for
+        an easy forward integration with LLM/NLP based models.
+        """
+    )
 
     def apply(self, text : str) -> str:
         """
@@ -216,27 +265,51 @@ class StopWords(NormalizerBaseModel):
     that when removed from a text improves an NLP/LLM models'
     performance. By default, the model is set to use the stopwords in
     the English language.
-
-    :param language: A valid language name which is available and
-        defined under :func:`nltk.corpus.stopwords`, defaults to the
-        English language.
-
-    :param extrawords: The model gives the flexibility to add extra
-        words which will be treated as stopwords which are not already
-        defined under the :func:`nltk.corpus.stopwords` function. This
-        can be helpful in dynamic debuging and quick manipulation of
-        text to check forward models performance.
-
-    :param excludewords: Opposite to ``extrawords`` this attribute
-        helps in updating the stopwords by removing/excluding words
-        from already defined set.
     """
 
-    language   : str = "english"
-    extrawords : list = []
+    language : str = Field(
+        "english",
+        description = """
+        A valid language name which is available and defined under
+        :func:`nltk.corpus.stopwords`, defaults to the English. To see
+        a valid list of languages follow below.
+
+        .. code-block:: python
+
+            import nltk
+
+            # download the corpus if not already available
+            # nltk.download("stopwords")
+            from nltk.corpus import stopwords
+
+            # once downloaded and available, check available list:
+            print(stopwords.fileids())
+
+        The code block is dependent on :mod:`nltk` for more information
+        check `docs <https://www.nltk.org/index.html>`_.
+        """
+    )
+
+    extrawords : list = Field(
+        [],
+        description = """
+        The model gives the flexibility to add extra words which will
+        be treated as stopwords which are not already defined under
+        the :func:`nltk.corpus.stopwords` function. This can be
+        helpful in dynamic debuging and quick manipulation of text to
+        check forward models performance.
+        """
+    )
 
     # ..versionadded:: 2025-10-24 - also allow words to be excluded
-    excludewords : list = []
+    excludewords : list = Field(
+        [],
+        description = """
+        Opposite to ``extrawords`` this attribute helps in updating
+        the stopwords by removing/excluding words from the already
+        defined words in ``stopwords.words(self.language)`` list.
+        """
+    )
 
     # ! by default, nltk library provides stopwords in lower case
     # however, we can override and set the value as per our case needs
