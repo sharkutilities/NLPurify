@@ -152,12 +152,12 @@ class WhiteSpace(NormalizerBaseModel):
 
         # first - strip the white space from beginning and end of text
         if self.strip:
-            text = text.strip(chars = self.strip_chars)
+            text = text.strip(self.strip_chars)
         else:
             if self.lstrip:
-                text = text.lstrip(chars = self.strip_chars)
+                text = text.lstrip(self.strip_chars)
             elif self.rstrip:
-                text = text.strip(chars = self.strip_chars)
+                text = text.strip(self.strip_chars)
             else:
                 pass # error is raised during model assertion
 
